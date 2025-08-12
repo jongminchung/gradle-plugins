@@ -1,0 +1,11 @@
+Id:
+  type: string
+  format: uuid
+  description: 애완 동물 ID
+
+Status:
+  type: string
+  enum:
+    - available
+    - pending
+    - sold

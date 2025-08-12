@@ -1,0 +1,3 @@
+ObjectStorageUrl:
+  type: string
+  format: url

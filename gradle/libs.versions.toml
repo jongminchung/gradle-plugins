@@ -1,1 +1,4 @@
 [plugins]
+
+[libraries]
+swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version = "2.1.31" }

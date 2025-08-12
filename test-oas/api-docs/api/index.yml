@@ -1,0 +1,568 @@
+openapi: 3.1.0
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |
+    This is an example API.
+  termsOfService: https://github.com/rhakdnj
+  license:
+    name: All right reserved
+    url: https://github.com/rhakdnj
+  version: 1.0.0
+tags:
+  - name: Pet
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: https://github.com/rhakdnj
+  - name: Store
+    description: Access to Petstore orders
+    externalDocs:
+      description: Find out more about our store
+      url: https://github.com/rhakdnj
+  - name: User
+    description: Operations about user
+paths:
+  /pets:
+    post:
+      operationId: Collection.post
+      tags:
+        - Pet
+      summary: Pet 생성
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - photoUrls
+              properties:
+                name:
+                  type: string
+                  format: hostname
+                  description: 리소스 이름 (RFC-1123)
+                  maxLength: 255
+                photoUrls:
+                  type: array
+                  items:
+                    type: string
+                    format: url
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required:
+                      - id
+                      - name
+                      - category
+                      - photoUrls
+                      - tags
+                      - status
+                      - createdAt
+                      - updatedAt
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: 애완 동물 ID
+                      name:
+                        type: string
+                        format: hostname
+                        description: 리소스 이름 (RFC-1123)
+                        maxLength: 255
+                      category:
+                        allOf:
+                          - type: object
+                            required:
+                              - id
+                              - name
+                              - createdAt
+                              - updatedAt
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                description: 카테고리 ID
+                              name:
+                                type: string
+                                format: hostname
+                                description: 리소스 이름 (RFC-1123)
+                                maxLength: 255
+                              createdAt:
+                                type: string
+                                description: 생성 일자
+                                format: date-time
+                              updatedAt:
+                                type: string
+                                description: 변경 일자
+                                format: date-time
+                      photoUrls:
+                        type: array
+                        items:
+                          type: string
+                          format: url
+                          description: 애완 동물 이미지 URL
+                      tags:
+                        type: array
+                        items:
+                          allOf:
+                            - type: object
+                              required:
+                                - id
+                                - name
+                                - createdAt
+                                - updatedAt
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                  description: 태그 ID
+                                name:
+                                  type: string
+                                  format: hostname
+                                  description: 리소스 이름 (RFC-1123)
+                                  maxLength: 255
+                                createdAt:
+                                  type: string
+                                  description: 생성 일자
+                                  format: date-time
+                                updatedAt:
+                                  type: string
+                                  description: 변경 일자
+                                  format: date-time
+                      status:
+                        type: string
+                        enum:
+                          - available
+                          - pending
+                          - sold
+                      createdAt:
+                        type: string
+                        description: 생성 일자
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        description: 변경 일자
+                        format: date-time
+    get:
+      operationId: Collection.get
+      tags:
+        - Pet
+      summary: Pet 목록 조회
+      parameters:
+        - in: query
+          name: page
+          description: 페이지
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 1
+        - in: query
+          name: size
+          description: 페이지당 갯수
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            default: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      allOf:
+                        - type: object
+                          required:
+                            - id
+                            - name
+                            - category
+                            - photoUrls
+                            - tags
+                            - status
+                            - createdAt
+                            - updatedAt
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                              description: 애완 동물 ID
+                            name:
+                              type: string
+                              format: hostname
+                              description: 리소스 이름 (RFC-1123)
+                              maxLength: 255
+                            category:
+                              allOf:
+                                - type: object
+                                  required:
+                                    - id
+                                    - name
+                                    - createdAt
+                                    - updatedAt
+                                  properties:
+                                    id:
+                                      type: string
+                                      format: uuid
+                                      description: 카테고리 ID
+                                    name:
+                                      type: string
+                                      format: hostname
+                                      description: 리소스 이름 (RFC-1123)
+                                      maxLength: 255
+                                    createdAt:
+                                      type: string
+                                      description: 생성 일자
+                                      format: date-time
+                                    updatedAt:
+                                      type: string
+                                      description: 변경 일자
+                                      format: date-time
+                            photoUrls:
+                              type: array
+                              items:
+                                type: string
+                                format: url
+                                description: 애완 동물 이미지 URL
+                            tags:
+                              type: array
+                              items:
+                                allOf:
+                                  - type: object
+                                    required:
+                                      - id
+                                      - name
+                                      - createdAt
+                                      - updatedAt
+                                    properties:
+                                      id:
+                                        type: string
+                                        format: uuid
+                                        description: 태그 ID
+                                      name:
+                                        type: string
+                                        format: hostname
+                                        description: 리소스 이름 (RFC-1123)
+                                        maxLength: 255
+                                      createdAt:
+                                        type: string
+                                        description: 생성 일자
+                                        format: date-time
+                                      updatedAt:
+                                        type: string
+                                        description: 변경 일자
+                                        format: date-time
+                            status:
+                              type: string
+                              enum:
+                                - available
+                                - pending
+                                - sold
+                            createdAt:
+                              type: string
+                              description: 생성 일자
+                              format: date-time
+                            updatedAt:
+                              type: string
+                              description: 변경 일자
+                              format: date-time
+  /pets/{petId}:
+    parameters:
+      - name: petId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          description: 애완 동물 ID
+    get:
+      operationId: ById.get
+      tags:
+        - Pet
+      summary: Pet 정보 조회
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required:
+                      - id
+                      - name
+                      - category
+                      - photoUrls
+                      - tags
+                      - status
+                      - createdAt
+                      - updatedAt
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: 애완 동물 ID
+                      name:
+                        type: string
+                        format: hostname
+                        description: 리소스 이름 (RFC-1123)
+                        maxLength: 255
+                      category:
+                        allOf:
+                          - type: object
+                            required:
+                              - id
+                              - name
+                              - createdAt
+                              - updatedAt
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                description: 카테고리 ID
+                              name:
+                                type: string
+                                format: hostname
+                                description: 리소스 이름 (RFC-1123)
+                                maxLength: 255
+                              createdAt:
+                                type: string
+                                description: 생성 일자
+                                format: date-time
+                              updatedAt:
+                                type: string
+                                description: 변경 일자
+                                format: date-time
+                      photoUrls:
+                        type: array
+                        items:
+                          type: string
+                          format: url
+                          description: 애완 동물 이미지 URL
+                      tags:
+                        type: array
+                        items:
+                          allOf:
+                            - type: object
+                              required:
+                                - id
+                                - name
+                                - createdAt
+                                - updatedAt
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                  description: 태그 ID
+                                name:
+                                  type: string
+                                  format: hostname
+                                  description: 리소스 이름 (RFC-1123)
+                                  maxLength: 255
+                                createdAt:
+                                  type: string
+                                  description: 생성 일자
+                                  format: date-time
+                                updatedAt:
+                                  type: string
+                                  description: 변경 일자
+                                  format: date-time
+                      status:
+                        type: string
+                        enum:
+                          - available
+                          - pending
+                          - sold
+                      createdAt:
+                        type: string
+                        description: 생성 일자
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        description: 변경 일자
+                        format: date-time
+    put:
+      operationId: ById.put
+      tags:
+        - Pet
+      summary: Pet 정보 변경
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - photoUrls
+              properties:
+                name:
+                  type: string
+                  format: hostname
+                  description: 리소스 이름 (RFC-1123)
+                  maxLength: 255
+                photoUrls:
+                  type: array
+                  items:
+                    type: string
+                    format: url
+                categoryId:
+                  type: string
+                  format: uuid
+                  description: 카테고리 ID
+                tagIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                    description: 태그 ID
+                status:
+                  type: string
+                  enum:
+                    - available
+                    - pending
+                    - sold
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    required:
+                      - id
+                      - name
+                      - category
+                      - photoUrls
+                      - tags
+                      - status
+                      - createdAt
+                      - updatedAt
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        description: 애완 동물 ID
+                      name:
+                        type: string
+                        format: hostname
+                        description: 리소스 이름 (RFC-1123)
+                        maxLength: 255
+                      category:
+                        allOf:
+                          - type: object
+                            required:
+                              - id
+                              - name
+                              - createdAt
+                              - updatedAt
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                description: 카테고리 ID
+                              name:
+                                type: string
+                                format: hostname
+                                description: 리소스 이름 (RFC-1123)
+                                maxLength: 255
+                              createdAt:
+                                type: string
+                                description: 생성 일자
+                                format: date-time
+                              updatedAt:
+                                type: string
+                                description: 변경 일자
+                                format: date-time
+                      photoUrls:
+                        type: array
+                        items:
+                          type: string
+                          format: url
+                          description: 애완 동물 이미지 URL
+                      tags:
+                        type: array
+                        items:
+                          allOf:
+                            - type: object
+                              required:
+                                - id
+                                - name
+                                - createdAt
+                                - updatedAt
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                  description: 태그 ID
+                                name:
+                                  type: string
+                                  format: hostname
+                                  description: 리소스 이름 (RFC-1123)
+                                  maxLength: 255
+                                createdAt:
+                                  type: string
+                                  description: 생성 일자
+                                  format: date-time
+                                updatedAt:
+                                  type: string
+                                  description: 변경 일자
+                                  format: date-time
+                      status:
+                        type: string
+                        enum:
+                          - available
+                          - pending
+                          - sold
+                      createdAt:
+                        type: string
+                        description: 생성 일자
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        description: 변경 일자
+                        format: date-time
+    delete:
+      operationId: ById.delete
+      tags:
+        - Pet
+      summary: Pet 삭제
+      responses:
+        '202':
+          description: 요청 수신
+          headers:
+            Location:
+              description: >-
+                Location 헤더
+                ([RFC-9110](https://datatracker.ietf.org/doc/html/rfc9110))
+              schema:
+                type: string
+                format: url
+        '204':
+          description: 삭제 성공
+servers:
+  - url: http://localhost:8080
+security:
+  - JWT: []
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

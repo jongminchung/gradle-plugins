@@ -1,0 +1,50 @@
+Error:
+  type: object
+  description: 에러 객체
+  required:
+    - status
+    - errors
+  properties:
+    status:
+      $ref: "./http-status.yml#/HttpStatus"
+    errors:
+      $ref: "#/ErrorDetails"
+
+ErrorDetails:
+  type: array
+  description: 오류 세부정보
+  items:
+    $ref: "#/ErrorDetail"
+
+ErrorDetail:
+  type: object
+  description: API 사용자에게 문제에 대한 명시적인 세부 정보를 제공 객체
+  required:
+    - detail
+  properties:
+    field:
+      type: string
+      description: 오류의 원인이 되는 속성
+    detail:
+      type: string
+      description: 본문 속성, 쿼리 매개변수, 경로 매개변수 및 헤더와 관련된 특정 오류에 대한 세부적인 설명
+
+# Todo: i want
+#ErrorDetail:
+#  type: object
+#  description: API 사용자에게 문제에 대한 명시적인 세부 정보를 제공 객체
+#  required:
+#    - detail
+#  properties:
+#    detail:
+#      type: string
+#      description: 본문 속성, 쿼리 매개변수, 경로 매개변수 및 헤더와 관련된 특정 오류에 대한 세부적인 설명
+#    pointer:
+#      type: string
+#      description: 오류의 원인이 되는 요청 본문 속성에 대한 JSON 포인터입니다.
+#    parameter:
+#      type: string
+#      description: 오류의 원인이 되는 쿼리 또는 경로의 이름입니다.
+#    header:
+#      type: string
+#      description: 오류의 원인이 되는 헤더의 이름입니다.

@@ -1,0 +1,21 @@
+BadRequestResponse:
+  description: 잘못된 요청
+  content:
+    application/problem+json:
+      schema:
+        $ref: "../schemas/common/error.yml#/Error"
+
+CreatedResponse:
+  description: 생성 성공
+  headers:
+    Location:
+      $ref: "../headers/index.yml#/Location"
+
+AcceptedResponse:
+  description: 요청 수신
+  headers:
+    Location:
+      $ref: "../headers/index.yml#/Location"
+
+DeletedResponse:
+  description: 삭제 성공

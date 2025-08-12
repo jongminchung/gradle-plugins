@@ -1,0 +1,41 @@
+# OpenAPI version identifier
+openapi: 3.1.0
+
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |
+    This is an example API.
+  termsOfService: https://github.com/rhakdnj
+  license:
+    name: All right reserved
+    url: https://github.com/rhakdnj
+  version: 1.0.0 # Same AS API version
+
+tags:
+  - name: Pet
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: https://github.com/rhakdnj
+  - name: Store
+    description: Access to Petstore orders
+    externalDocs:
+      description: Find out more about our store
+      url: https://github.com/rhakdnj
+  - name: User
+    description: Operations about user
+
+paths:
+  $ref: "../core/paths/index.yml"
+
+servers:
+  - url: http://localhost:8080
+
+security:
+  - JWT: []
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
