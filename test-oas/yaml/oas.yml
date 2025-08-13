@@ -26,7 +26,7 @@ tags:
     description: Operations about user
 
 paths:
-  $ref: "../core/paths/index.yml"
+  $ref: "core/paths/index.yml"
 
 servers:
   - url: http://localhost:8080

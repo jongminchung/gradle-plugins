@@ -1,13 +1,15 @@
 plugins {
-    id("io.github.jongmin-chung.swagger-merger")
+    id("io.github.jongmin-chung.api-docs-plugin")
 }
 
-// 방법 1: Extension을 통한 기본 태스크 설정
-swaggerMerger {
-    inputFile.set(file("api-docs/api/openapi.yml"))
-    outputFile.set(file("build/generated/openapi.yml"))
+apiDocs {
+    sourceDir = layout.projectDirectory.dir("yaml")
 
-    // 선택적 설정
-//    configFile.set(file("swagger-config.json"))
-//    additionalArgs.set(listOf("--compact", "--verbose"))
+    postmanVariables = (
+        mapOf(
+            "petId" to "123e4567-e89b-12d3-a456-426614174000",
+        )
+    )
+
+    postmanConfigFile = layout.projectDirectory.file("postman.json")
 }
