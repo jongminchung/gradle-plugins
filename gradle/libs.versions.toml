@@ -1,4 +1,27 @@
-[plugins]
+[versions]
+java = "21"
+
+spotless = "7.2.1"
+palantirJavaFormat = "2.81.0"
+
+spring-boot = "4.0.0-RC1"
+spring-dependency-management = "1.1.7"
+
 
 [libraries]
 swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version = "2.1.31" }
+
+jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
+nullaway = { module = "com.uber.nullaway:nullaway", version = "0.12.10" }
+errorprone = { module = "com.google.errorprone:error_prone_core", version = "2.43.0" }
+
+gradle-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }
+gradle-spring-dependency-management = { module = "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin", version.ref = "spring-dependency-management" }
+gradle-errorprone = { module = "net.ltgt.gradle:gradle-errorprone-plugin", version = "4.3.0" }
+gradle-nullaway = { module = "net.ltgt.gradle:gradle-nullaway-plugin", version = "2.3.0" }
+gradle-lombok = { module = "io.freefair.lombok:io.freefair.lombok.gradle.plugin", version = "9.0.0" }
+
+[plugins]
+java = { id = "java" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+gradle-plugin-publish = { id = "com.gradle.plugin-publish", version = "2.0.0" }
