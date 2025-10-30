@@ -9,7 +9,6 @@ import org.gradle.testing.jacoco.plugins.JacocoReportAggregationPlugin;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.gradle.plugin.SpringBootPlugin;
 
-import net.ltgt.gradle.errorprone.ErrorPronePlugin;
 
 import io.freefair.gradle.plugins.lombok.LombokPlugin;
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin;
@@ -41,7 +40,6 @@ public class SpringBootApplicationPlugin implements Plugin<@NonNull Project> {
         plugins.apply("jvm-test-suite");
         plugins.apply(JvmTestSuiteConventionPlugin.class);
 
-        plugins.apply(ErrorPronePlugin.class);
         plugins.apply(ErrorproneConventionPlugin.class);
 
         plugins.apply(LombokPlugin.class);

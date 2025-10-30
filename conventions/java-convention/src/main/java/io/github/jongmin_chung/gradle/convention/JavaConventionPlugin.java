@@ -9,22 +9,20 @@ import org.jspecify.annotations.NonNull;
 
 public class JavaConventionPlugin implements Plugin<@NonNull Project> {
 
-    private static final String JAVA_PLUGIN_NAME = "java";
-
     @Override
     public void apply(Project target) {
         var extraJava = target.getExtensions().create(ExtraJavaExtension.EXTENSION_NAME, ExtraJavaExtension.class);
 
         target.afterEvaluate(project -> {
-            if (!extraJava.enabled.get()) {
+            if (!extraJava.getEnabled().get()) {
                 return;
             }
 
             var pluginManager = project.getPluginManager();
 
-            pluginManager.withPlugin(JAVA_PLUGIN_NAME, applied -> project.getExtensions()
+            pluginManager.withPlugin("java", applied -> project.getExtensions()
                     .configure(JavaPluginExtension.class, javaExt -> {
-                        if (extraJava.withJavadocJar.getOrElse(true)) {
+                        if (extraJava.getWithJavadocJar().getOrElse(true)) {
                             javaExt.withJavadocJar();
 
                             project.getTasks().withType(Javadoc.class).configureEach(javadoc -> {
@@ -33,7 +31,7 @@ public class JavaConventionPlugin implements Plugin<@NonNull Project> {
                             });
                         }
 
-                        if (extraJava.withSourcesJar.getOrElse(true)) {
+                        if (extraJava.getWithSourcesJar().getOrElse(true)) {
                             javaExt.withSourcesJar();
                         }
                     }));

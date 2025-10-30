@@ -15,8 +15,7 @@ public class PublishMavenConventionPlugin implements Plugin<@NonNull Project> {
                         ExtraMavenPublishExtension.class);
 
         target.afterEvaluate(project -> {
-            boolean enabled = extraMavenPublishExtension.enabled.get();
-            if (!enabled) {
+            if (!extraMavenPublishExtension.getEnabled().get()) {
                 return;
             }
 

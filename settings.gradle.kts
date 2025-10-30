@@ -18,7 +18,6 @@ includeConvention("java-convention")
 includeConvention("jvm-test-suite-convention")
 includeConvention("spring-boot-convention")
 includeConvention("errorprone-convention")
-includeConvention("nullaway-convention")
 
 includePlugin("spring-boot-app-plugin")
 

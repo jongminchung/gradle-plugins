@@ -6,18 +6,29 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 import org.jspecify.annotations.NonNull;
 
-public abstract class ExtraJavaExtension {
+public class ExtraJavaExtension {
     static final String EXTENSION_NAME = "javaExt";
 
-    final Property<@NonNull Boolean> enabled;
-    final Property<@NonNull Boolean> withJavadocJar;
-    final Property<@NonNull Boolean> withSourcesJar;
+    private final Property<@NonNull Boolean> enabled;
+    private final Property<@NonNull Boolean> withJavadocJar;
+    private final Property<@NonNull Boolean> withSourcesJar;
 
     @Inject
-    protected ExtraJavaExtension(ObjectFactory objects) {
+    public ExtraJavaExtension(ObjectFactory objects) {
         this.enabled = objects.property(Boolean.class).convention(true);
-
         this.withJavadocJar = objects.property(Boolean.class).convention(true);
         this.withSourcesJar = objects.property(Boolean.class).convention(true);
+    }
+
+    public Property<@NonNull Boolean> getEnabled() {
+        return enabled;
+    }
+
+    public Property<@NonNull Boolean> getWithJavadocJar() {
+        return withJavadocJar;
+    }
+
+    public Property<@NonNull Boolean> getWithSourcesJar() {
+        return withSourcesJar;
     }
 }

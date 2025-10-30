@@ -25,11 +25,7 @@ dependencies {
     implementation(rootProject.projects.javaConvention)
     implementation(rootProject.projects.jvmTestSuiteConvention)
 
-    implementation(libs.gradle.errorprone)
     implementation(rootProject.projects.errorproneConvention)
-
-    implementation(libs.gradle.nullaway)
-    implementation(rootProject.projects.nullawayConvention)
 
     implementation(libs.gradle.lombok)
 }

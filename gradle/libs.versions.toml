@@ -17,11 +17,10 @@ errorprone = { module = "com.google.errorprone:error_prone_core", version = "2.4
 
 gradle-spring-boot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }
 gradle-spring-dependency-management = { module = "io.spring.dependency-management:io.spring.dependency-management.gradle.plugin", version.ref = "spring-dependency-management" }
-gradle-errorprone = { module = "net.ltgt.gradle:gradle-errorprone-plugin", version = "4.3.0" }
+gradle-errorprone = { module = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin", version = "4.3.0" }
 gradle-nullaway = { module = "net.ltgt.gradle:gradle-nullaway-plugin", version = "2.3.0" }
 gradle-lombok = { module = "io.freefair.lombok:io.freefair.lombok.gradle.plugin", version = "9.0.0" }
 
 [plugins]
-java = { id = "java" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 gradle-plugin-publish = { id = "com.gradle.plugin-publish", version = "2.0.0" }
