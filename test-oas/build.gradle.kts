@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.jongmin-chung.api-docs-plugin")
+    id("io.github.jongminchung.api-docs-plugin")
 }
 
 apiDocs {

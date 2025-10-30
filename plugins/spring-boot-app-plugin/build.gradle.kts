@@ -1,8 +1,8 @@
 gradlePlugin {
     plugins {
         create("spring-boot-app") {
-            implementationClass = "io.github.jongmin_chung.gradle.plugin.SpringBootApplicationPlugin"
-            id = "io.github.jongmin-chung.spring-boot-app"
+            implementationClass = "io.github.jongminchung.gradle.plugin.SpringBootApplicationPlugin"
+            id = "io.github.jongminchung.spring-boot-app"
             displayName = "Gradle plugin for Spring Boot Application"
             description =
                 "A Gradle plugin that simplifies and enhances the configuration of Spring Boot projects"
@@ -25,11 +25,7 @@ dependencies {
     implementation(rootProject.projects.javaConvention)
     implementation(rootProject.projects.jvmTestSuiteConvention)
 
-    implementation(libs.gradle.errorprone)
     implementation(rootProject.projects.errorproneConvention)
-
-    implementation(libs.gradle.nullaway)
-    implementation(rootProject.projects.nullawayConvention)
 
     implementation(libs.gradle.lombok)
 }

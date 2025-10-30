@@ -31,7 +31,7 @@ tasks.check {
 val versionCatalog = libs
 
 allprojects {
-    group = "io.github.jongmin_chung"
+    group = "io.github.jongminchung"
 
     apply(plugin = "java")
     apply(plugin = "com.diffplug.spotless")
@@ -52,7 +52,7 @@ allprojects {
             formatAnnotations()
             removeUnusedImports()
             trimTrailingWhitespace()
-            importOrder("java", "jakarta", "org", "com", "net", "io", "lombok", "io.github.jongmin_chung")
+            importOrder("java", "jakarta", "org", "com", "net", "io", "lombok", "io.github.jongminchung")
         }
 
         kotlin {
@@ -132,8 +132,8 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
     configure<GradlePluginDevelopmentExtension> { testSourceSet(functionalTest.get()) }
 
     configure<GradlePluginDevelopmentExtension> {
-        website = "https://github.com/jongmin-chung/gradle-plugins"
-        vcsUrl = "https://github.com/jongmin-chung/gradle-plugins.git"
+        website = "https://github.com/jongminchung/gradle-plugins"
+        vcsUrl = "https://github.com/jongminchung/gradle-plugins.git"
     }
 
 //    signing {

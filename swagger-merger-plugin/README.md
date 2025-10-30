@@ -1,4 +1,4 @@
-https://github.com/jongmin-chung/spring-multi-module-boilerplate/tree/main/docs/api-docs
+https://github.com/jongminchung/spring-multi-module-boilerplate/tree/main/docs/api-docs
 
 해당 경로를 분석해서 README.md 파일에 작성해주세요.
 
