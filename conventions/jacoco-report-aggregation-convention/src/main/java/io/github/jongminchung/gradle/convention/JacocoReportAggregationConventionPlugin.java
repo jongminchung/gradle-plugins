@@ -20,6 +20,7 @@ public class JacocoReportAggregationConventionPlugin implements Plugin<@NotNull 
 
                 project.getAllprojects().stream()
                         .filter(p -> p.getPluginManager().hasPlugin("jacoco"))
+                        .filter(p -> p != project)
                         .forEach(p -> deps.add(
                                 JACOCO_AGGREGATION_CONFIGURATION_NAME, deps.project(Map.of("path", p.getPath()))));
             });
