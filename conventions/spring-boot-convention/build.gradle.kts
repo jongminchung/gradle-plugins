@@ -12,6 +12,7 @@ gradlePlugin {
 
 dependencies {
     compileOnly(libs.gradle.spring.boot)
+    testImplementation(libs.gradle.spring.boot)
 }
 
 // configurations.compileOnly.get().isCanBeResolved = true

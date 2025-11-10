@@ -69,7 +69,7 @@ allprojects {
 
 configure(subprojects.filter { !it.name.endsWith("example") }) {
     apply(plugin = "jacoco")
-//    apply(plugin = "signing")
+    apply(plugin = "signing")
     apply(plugin = "com.gradle.plugin-publish")
 
     testing {
@@ -94,6 +94,9 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
 
     configurations {
         named<Configuration>("functionalTestImplementation").get().extendsFrom(configurations.testImplementation.get())
+        named<Configuration>("functionalTestRuntimeOnly").configure {
+            extendsFrom(configurations.testRuntimeOnly.get())
+        }
     }
 
     tasks.named("check") {
@@ -136,21 +139,30 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
         vcsUrl = "https://github.com/jongminchung/gradle-plugins.git"
     }
 
-//    signing {
-//        // ORG_GRADLE_PROJECT_signingKeyId
-//        val signingKeyId: String? by project
-//        // ascii-armored format
-//        // ORG_GRADLE_PROJECT_signingKey
-//        val signingKey: String? by project
-//        // ORG_GRADLE_PROJECT_signingPassword
-//        val signingPassword: String? by project
-//
-//        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-//        sign(extensions.getByType<PublishingExtension>().publications)
-//    }
+    signing {
+        // ORG_GRADLE_PROJECT_signingKeyId
+        val signingKeyId: String? by project
+        // ascii-armored format
+        // ORG_GRADLE_PROJECT_signingKey
+        val signingKey: String? by project
+        // ORG_GRADLE_PROJECT_signingPassword
+        val signingPassword: String? by project
+
+        val hasSignProperties = signingKey != null && signingPassword != null
+
+        setRequired { hasSignProperties }
+
+        if (hasSignProperties) {
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+            sign(extensions.getByType<PublishingExtension>().publications)
+        }
+    }
 
     dependencies {
         implementation(versionCatalog.jspecify)
+        testImplementation(versionCatalog.junit.jupiter)
+        testImplementation(versionCatalog.assertj.core)
+        testRuntimeOnly(versionCatalog.junit.jupiter.engine)
     }
 }
 
