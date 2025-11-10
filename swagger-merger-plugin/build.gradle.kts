@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "io.github.jongmin_chung"
+group = "io.github.jongminchung"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ dependencies {
 gradlePlugin {
     plugins {
         create("swaggerMerger") {
-            id = "io.github.jongmin-chung.swagger-merger"
+            id = "io.github.jongminchung.swagger-merger"
             implementationClass = "SwaggerMergerPlugin"
             displayName = "Swagger Merger Plugin"
             description = "A Gradle plugin to merge Swagger specifications using npx swagger-merger"

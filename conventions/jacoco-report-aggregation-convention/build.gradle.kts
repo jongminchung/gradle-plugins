@@ -2,8 +2,8 @@ gradlePlugin {
     plugins {
         create("jacoco-report-aggregation.convention") {
             implementationClass =
-                "io.github.jongmin_chung.gradle.convention.JacocoReportAggregationConventionPlugin"
-            id = "io.github.jongmin-chung.jacoco-report-aggregation.convention"
+                "io.github.jongminchung.gradle.convention.JacocoReportAggregationConventionPlugin"
+            id = "io.github.jongminchung.jacoco-report-aggregation.convention"
             displayName = "Gradle plugin enhancing jacoco-report-aggregation"
             description =
                 "A Gradle plugin that simplifies and extends the jacoco-report-aggregation plugin, enabling consolidated code coverage reports across multiple projects or modules."

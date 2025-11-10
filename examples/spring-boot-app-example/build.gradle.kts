@@ -1,6 +1,11 @@
-plugins {
-    id("io.github.jongmin-chung.spring-boot-app") version "0.1.0-SNAPSHOT"
+buildscript {
+    dependencies {
+        // Put the plugin project on the buildscript classpath so the example works without publishing.
+        classpath(project(":spring-boot-app-plugin"))
+    }
 }
+
+apply(plugin = "io.github.jongminchung.spring-boot-app")
 
 java {
     toolchain {

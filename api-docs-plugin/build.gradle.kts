@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "io.github.jongmin_chung"
+group = "io.github.jongminchung"
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ dependencies {
 gradlePlugin {
     plugins {
         create("apiDocsPlugin") {
-            id = "io.github.jongmin-chung.api-docs-plugin"
+            id = "io.github.jongminchung.api-docs-plugin"
             implementationClass = "ApiDocsPlugin"
             displayName = "Api Document Plugin"
             description = "Hello world!"
