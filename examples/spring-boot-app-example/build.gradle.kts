@@ -11,11 +11,3 @@ java {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
 }
-
-tasks.withType<PublishToMavenRepository>().configureEach {
-    enabled = false
-}
-
-tasks.withType<PublishToMavenLocal>().configureEach {
-    enabled = false
-}
