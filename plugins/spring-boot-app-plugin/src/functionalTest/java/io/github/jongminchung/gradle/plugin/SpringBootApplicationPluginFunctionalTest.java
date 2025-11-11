@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,7 @@ class SpringBootApplicationPluginFunctionalTest {
     @Test
     void appliesAllSupportingPluginsInRealBuild() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         plugins {
                             id("%s")
                         }
@@ -53,8 +53,7 @@ class SpringBootApplicationPluginFunctionalTest {
                                 }
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         var result = runGradle("verifySpringBootAppPlugin");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");

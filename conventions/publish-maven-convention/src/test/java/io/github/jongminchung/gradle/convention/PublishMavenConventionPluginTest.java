@@ -18,8 +18,7 @@ class PublishMavenConventionPluginTest {
 
         project.getPluginManager().apply(PublishMavenConventionPlugin.class);
 
-        ExtraMavenPublishExtension extension =
-                project.getExtensions().findByType(ExtraMavenPublishExtension.class);
+        ExtraMavenPublishExtension extension = project.getExtensions().findByType(ExtraMavenPublishExtension.class);
         assertThat(extension).isNotNull();
         assertThat(extension.getEnabled().get()).isTrue();
     }

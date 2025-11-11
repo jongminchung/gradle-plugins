@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,7 @@ class PublishMavenConventionPluginFunctionalTest {
     @Test
     void enablesBuildIdentifiersOnPublications() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         import org.gradle.api.publish.internal.PublicationInternal
                         import org.gradle.api.publish.maven.MavenPublication
 
@@ -48,8 +48,7 @@ class PublishMavenConventionPluginFunctionalTest {
                                 }
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyMavenPublishConvention");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");

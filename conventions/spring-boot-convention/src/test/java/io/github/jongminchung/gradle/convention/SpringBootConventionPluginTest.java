@@ -3,8 +3,6 @@ package io.github.jongminchung.gradle.convention;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.internal.project.ProjectInternal;
 import org.gradle.api.plugins.JavaPlugin;
@@ -23,8 +21,7 @@ class SpringBootConventionPluginTest {
 
         evaluate(project);
 
-        var implementation =
-                project.getConfigurations().getByName(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME);
+        var implementation = project.getConfigurations().getByName(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME);
         assertThat(implementation.getDependencies())
                 .anyMatch(dep -> "org.springframework.boot".equals(dep.getGroup())
                         && "spring-boot-starter".equals(dep.getName()));
@@ -37,14 +34,13 @@ class SpringBootConventionPluginTest {
                 .findFirst()
                 .orElseThrow();
         assertThat(starterTest.getExcludeRules())
-                .anyMatch(rule -> "org.junit.vintage".equals(rule.getGroup())
-                        && "junit-vintage-engine".equals(rule.getModule()));
+                .anyMatch(rule ->
+                        "org.junit.vintage".equals(rule.getGroup()) && "junit-vintage-engine".equals(rule.getModule()));
 
-        var testRuntimeOnly =
-                project.getConfigurations().getByName(JavaPlugin.TEST_RUNTIME_ONLY_CONFIGURATION_NAME);
+        var testRuntimeOnly = project.getConfigurations().getByName(JavaPlugin.TEST_RUNTIME_ONLY_CONFIGURATION_NAME);
         assertThat(testRuntimeOnly.getDependencies())
-                .anyMatch(dep -> "org.junit.platform".equals(dep.getGroup())
-                        && "junit-platform-launcher".equals(dep.getName()));
+                .anyMatch(dep ->
+                        "org.junit.platform".equals(dep.getGroup()) && "junit-platform-launcher".equals(dep.getName()));
     }
 
     @Test

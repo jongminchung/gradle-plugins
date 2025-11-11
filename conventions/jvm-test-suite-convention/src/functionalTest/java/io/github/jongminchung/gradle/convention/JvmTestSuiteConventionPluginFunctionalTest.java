@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,7 @@ class JvmTestSuiteConventionPluginFunctionalTest {
     @Test
     void registersAdditionalSuitesInRealBuild() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         import org.gradle.testing.base.TestingExtension
                         import org.gradle.api.plugins.jvm.JvmTestSuite
 
@@ -45,15 +45,15 @@ class JvmTestSuiteConventionPluginFunctionalTest {
                                 }
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyJvmTestSuites");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
     }
 
     private void writeSettings() throws IOException {
-        Files.writeString(projectDir.resolve("settings.gradle.kts"), "rootProject.name = \"jvm-test-suite-convention\"");
+        Files.writeString(
+                projectDir.resolve("settings.gradle.kts"), "rootProject.name = \"jvm-test-suite-convention\"");
     }
 
     private void writeBuildScript(String content) throws IOException {

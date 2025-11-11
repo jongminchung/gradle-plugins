@@ -4,9 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.gradle.api.Project;
 import org.gradle.api.internal.project.ProjectInternal;
-import org.gradle.testing.jacoco.plugins.JacocoPlugin;
-import org.gradle.testing.jacoco.tasks.JacocoReport;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.gradle.testing.jacoco.tasks.JacocoReport;
 import org.junit.jupiter.api.Test;
 
 class JacocoConventionPluginTest {

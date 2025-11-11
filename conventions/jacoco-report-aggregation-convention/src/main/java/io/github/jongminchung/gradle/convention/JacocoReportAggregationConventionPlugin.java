@@ -22,7 +22,8 @@ public class JacocoReportAggregationConventionPlugin implements Plugin<@NotNull 
                         .filter(project -> project.getPluginManager().hasPlugin("jacoco"))
                         .filter(project -> project != target)
                         .forEach(project -> deps.add(
-                                JACOCO_AGGREGATION_CONFIGURATION_NAME, deps.project(Map.of("path", project.getPath()))));
+                                JACOCO_AGGREGATION_CONFIGURATION_NAME,
+                                deps.project(Map.of("path", project.getPath()))));
             });
         });
     }

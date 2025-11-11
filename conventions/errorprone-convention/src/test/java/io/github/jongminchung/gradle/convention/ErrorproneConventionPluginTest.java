@@ -2,13 +2,14 @@ package io.github.jongminchung.gradle.convention;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import net.ltgt.gradle.errorprone.ErrorPronePlugin;
-import net.ltgt.gradle.nullaway.NullAwayPlugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
+
+import net.ltgt.gradle.errorprone.ErrorPronePlugin;
+import net.ltgt.gradle.nullaway.NullAwayPlugin;
 
 class ErrorproneConventionPluginTest {
 
@@ -35,13 +36,11 @@ class ErrorproneConventionPluginTest {
         assertThat(implementation.getDependencies())
                 .anyMatch(dep -> "org.jspecify".equals(dep.getGroup()) && "jspecify".equals(dep.getName()));
 
-        Configuration errorprone =
-                project.getConfigurations().getByName(ErrorPronePlugin.CONFIGURATION_NAME);
+        Configuration errorprone = project.getConfigurations().getByName(ErrorPronePlugin.CONFIGURATION_NAME);
         assertThat(errorprone.getDependencies())
                 .anyMatch(dep -> "com.uber.nullaway".equals(dep.getGroup()) && "nullaway".equals(dep.getName()));
         assertThat(errorprone.getDependencies())
-                .anyMatch(
-                        dep -> "com.google.errorprone".equals(dep.getGroup())
-                                && "error_prone_core".equals(dep.getName()));
+                .anyMatch(dep ->
+                        "com.google.errorprone".equals(dep.getGroup()) && "error_prone_core".equals(dep.getName()));
     }
 }

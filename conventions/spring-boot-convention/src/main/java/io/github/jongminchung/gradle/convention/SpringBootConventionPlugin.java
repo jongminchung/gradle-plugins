@@ -1,5 +1,7 @@
 package io.github.jongminchung.gradle.convention;
 
+import static org.gradle.api.plugins.JavaPlugin.COMPILE_JAVA_TASK_NAME;
+
 import java.util.Map;
 
 import org.gradle.api.Plugin;
@@ -7,8 +9,6 @@ import org.gradle.api.Project;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.plugins.JavaPlugin;
 import org.jspecify.annotations.NonNull;
-
-import static org.gradle.api.plugins.JavaPlugin.COMPILE_JAVA_TASK_NAME;
 
 public class SpringBootConventionPlugin implements Plugin<@NonNull Project> {
     private static final String SPRING_BOOT_PLUGIN_ID = "org.springframework.boot";

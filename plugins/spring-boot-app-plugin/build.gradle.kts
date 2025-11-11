@@ -1,11 +1,15 @@
+project.description =
+    """
+    A Gradle plugin that simplifies and enhances the configuration of Spring Boot projects
+    """.trimIndent()
+
 gradlePlugin {
     plugins {
         create("spring-boot-app") {
             implementationClass = "io.github.jongminchung.gradle.plugin.SpringBootApplicationPlugin"
             id = "io.github.jongminchung.spring-boot-app"
             displayName = "Gradle plugin for Spring Boot Application"
-            description =
-                "A Gradle plugin that simplifies and enhances the configuration of Spring Boot projects"
+            description = project.description
             tags = listOf("java", "spring", "spring-boot", "gradle-plugin")
         }
     }

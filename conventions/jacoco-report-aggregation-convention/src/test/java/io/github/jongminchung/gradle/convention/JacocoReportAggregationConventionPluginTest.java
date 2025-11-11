@@ -15,7 +15,8 @@ class JacocoReportAggregationConventionPluginTest {
     @Test
     void wiresJacocoSubprojectsIntoAggregationConfiguration() {
         Project root = ProjectBuilder.builder().withName("root").build();
-        Project library = ProjectBuilder.builder().withName("lib").withParent(root).build();
+        Project library =
+                ProjectBuilder.builder().withName("lib").withParent(root).build();
 
         library.getPluginManager().apply("jacoco");
 
@@ -24,7 +25,8 @@ class JacocoReportAggregationConventionPluginTest {
 
         evaluate(root);
 
-        Dependency dependency = root.getConfigurations()
+        Dependency dependency = root
+                .getConfigurations()
                 .getByName(JacocoReportAggregationPlugin.JACOCO_AGGREGATION_CONFIGURATION_NAME)
                 .getDependencies()
                 .stream()

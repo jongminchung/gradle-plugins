@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,7 @@ class JacocoConventionPluginFunctionalTest {
     @Test
     void configuresJacocoReportsViaTask() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         import org.gradle.testing.jacoco.tasks.JacocoReport
 
                         plugins {
@@ -37,8 +37,7 @@ class JacocoConventionPluginFunctionalTest {
                                 check(!report.reports.csv.required.get())
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyJacocoConvention");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.testing.base.TestingExtension;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.gradle.testing.base.TestingExtension;
 import org.junit.jupiter.api.Test;
 
 class JvmTestSuiteConventionPluginTest {

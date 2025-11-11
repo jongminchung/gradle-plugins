@@ -1,3 +1,9 @@
+description =
+    """
+    A Gradle plugin that simplifies and extends the jacoco-report-aggregation plugin,
+    enabling consolidated code coverage reports across multiple projects or modules.
+    """.trimIndent()
+
 gradlePlugin {
     plugins {
         create("jacoco-report-aggregation.convention") {
@@ -5,8 +11,7 @@ gradlePlugin {
                 "io.github.jongminchung.gradle.convention.JacocoReportAggregationConventionPlugin"
             id = "io.github.jongminchung.jacoco-report-aggregation.convention"
             displayName = "Gradle plugin enhancing jacoco-report-aggregation"
-            description =
-                "A Gradle plugin that simplifies and extends the jacoco-report-aggregation plugin, enabling consolidated code coverage reports across multiple projects or modules."
+            description = description
             tags =
                 listOf(
                     "jacoco",

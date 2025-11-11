@@ -1,20 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
-import org.gradle.api.publish.maven.plugins.MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME
-import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME
-import org.gradle.api.publish.plugins.PublishingPlugin.PUBLISH_TASK_GROUP
-import org.gradle.language.base.plugins.LifecycleBasePlugin.ASSEMBLE_TASK_NAME
-import org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_TASK_NAME
-import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
-import org.gradle.language.base.plugins.LifecycleBasePlugin.CLEAN_TASK_NAME
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 
 plugins {
     java
-    signing
     `jvm-test-suite`
     `jacoco-report-aggregation`
     alias(libs.plugins.spotless)
-    alias(libs.plugins.gradle.plugin.publish) apply false
+    alias(libs.plugins.maven.publish) apply false
 }
 
 dependencies {
@@ -41,8 +34,6 @@ allprojects {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(jdkVersion))
         }
-        withJavadocJar()
-        withSourcesJar()
     }
 
     spotless {
@@ -69,8 +60,13 @@ allprojects {
 
 configure(subprojects.filter { !it.name.endsWith("example") }) {
     apply(plugin = "jacoco")
-    apply(plugin = "signing")
-    apply(plugin = "com.gradle.plugin-publish")
+    apply(plugin = "java-gradle-plugin")
+    apply(
+        plugin =
+            versionCatalog.plugins.maven.publish
+                .get()
+                .pluginId,
+    )
 
     testing {
         suites {
@@ -137,56 +133,53 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
         vcsUrl = "https://github.com/jongminchung/gradle-plugins.git"
     }
 
-    signing {
-        // ORG_GRADLE_PROJECT_signingKeyId
-        val signingKeyId: String? by project
-        // ascii-armored format
-        // ORG_GRADLE_PROJECT_signingKey
-        val signingKey: String? by project
-        // ORG_GRADLE_PROJECT_signingPassword
-        val signingPassword: String? by project
-
-        val hasSignProperties = signingKey != null && signingPassword != null
-
-        setRequired { hasSignProperties }
-
-        if (hasSignProperties) {
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-            sign(extensions.getByType<PublishingExtension>().publications)
-        }
-    }
-
     dependencies {
         implementation(versionCatalog.jspecify)
+
+        testImplementation(gradleKotlinDsl())
+
         testImplementation(versionCatalog.junit.jupiter)
         testImplementation(versionCatalog.assertj.core)
         testRuntimeOnly(versionCatalog.junit.jupiter.engine)
     }
-}
 
-listOf(
-    PUBLISH_LIFECYCLE_TASK_NAME to PUBLISH_TASK_GROUP,
-    PUBLISH_LOCAL_LIFECYCLE_TASK_NAME to PUBLISH_TASK_GROUP,
-    "publishPlugins" to PUBLISH_TASK_GROUP,
-).forEach { (taskName, taskGroup) ->
-    tasks.register(taskName) {
-        group = taskGroup
-        description = "Aggregate task for publishing from all subprojects."
-    }
-}
+    /**
+     * Default Maven publication configuration for all subprojects
+     */
+    extensions.configure<MavenPublishBaseExtension> {
+        signAllPublications()
 
-listOf(
-    CLEAN_TASK_NAME,
-    ASSEMBLE_TASK_NAME,
-    BUILD_TASK_NAME,
-    CHECK_TASK_NAME,
-    "jacocoTestReport",
-    "testCodeCoverageReport",
-    PUBLISH_LIFECYCLE_TASK_NAME,
-    PUBLISH_LOCAL_LIFECYCLE_TASK_NAME,
-    "publishPlugins",
-).forEach { taskName ->
-    tasks.findByName(taskName)?.also { task ->
-        task.dependsOn(project.subprojects.mapNotNull { it.tasks.findByName(taskName) })
+        coordinates(
+            groupId = project.group.toString(),
+            artifactId = project.name,
+            version = project.version.toString(),
+        )
+
+        pom {
+            name = project.name
+            description = project.description
+            url = "https://github.com/jongminchung/gradle-plugins"
+
+            licenses {
+                license {
+                    name = "The Apache License, Version 2.0"
+                    url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                }
+            }
+
+            developers {
+                developer {
+                    id = "jongminchung"
+                    name = "Jongmin Chung"
+                    email = "chungjm0711@gmail.com"
+                }
+            }
+
+            scm {
+                connection = "scm:git:git://github.com/jongminchung/gradle-plugins.git"
+                developerConnection = "scm:git:ssh://github.com/jongminchung/gradle-plugins.git"
+                url = "https://github.com/jongminchung/gradle-plugins"
+            }
+        }
     }
 }

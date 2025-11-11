@@ -9,7 +9,6 @@ import org.gradle.testing.jacoco.plugins.JacocoReportAggregationPlugin;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.gradle.plugin.SpringBootPlugin;
 
-
 import io.freefair.gradle.plugins.lombok.LombokPlugin;
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin;
 

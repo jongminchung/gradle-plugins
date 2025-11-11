@@ -20,8 +20,8 @@ public class JavaConventionPlugin implements Plugin<@NonNull Project> {
 
             var pluginManager = project.getPluginManager();
 
-            pluginManager.withPlugin("java", applied -> project.getExtensions()
-                    .configure(JavaPluginExtension.class, javaExt -> {
+            pluginManager.withPlugin(
+                    "java", applied -> project.getExtensions().configure(JavaPluginExtension.class, javaExt -> {
                         if (extraJava.getWithJavadocJar().getOrElse(true)) {
                             javaExt.withJavadocJar();
 

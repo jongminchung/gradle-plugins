@@ -16,8 +16,9 @@ public class JvmTestSuiteConventionPlugin implements Plugin<@NonNull Project> {
         target.getPluginManager().apply("jvm-test-suite");
 
         var pluginManager = target.getPluginManager();
-        pluginManager.withPlugin("java", javaPlugin ->
-                pluginManager.withPlugin("jvm-test-suite", ignored -> configureTestingExtension(target)));
+        pluginManager.withPlugin(
+                "java",
+                javaPlugin -> pluginManager.withPlugin("jvm-test-suite", ignored -> configureTestingExtension(target)));
     }
 
     @SuppressWarnings("UnstableApiUsage")

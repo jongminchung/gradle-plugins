@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.jongminchung.spring-boot-app")
+    id("io.github.jongminchung.spring-boot-app") version "0.0.1"
 }
 
 java {
@@ -10,4 +10,12 @@ java {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+}
+
+tasks.withType<PublishToMavenRepository>().configureEach {
+    enabled = false
+}
+
+tasks.withType<PublishToMavenLocal>().configureEach {
+    enabled = false
 }

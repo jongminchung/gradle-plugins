@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,7 @@ class ErrorproneConventionPluginFunctionalTest {
     @Test
     void configuresErrorproneDependencies() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         plugins {
                             id("%s")
                             id("java")
@@ -37,15 +37,15 @@ class ErrorproneConventionPluginFunctionalTest {
                                 check(errorprone.any { it.group == "com.google.errorprone" && it.name == "error_prone_core" })
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyErrorproneConvention");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
     }
 
     private void writeSettings() throws IOException {
-        Files.writeString(projectDir.resolve("settings.gradle.kts"), "rootProject.name = \"errorprone-convention-test\"");
+        Files.writeString(
+                projectDir.resolve("settings.gradle.kts"), "rootProject.name = \"errorprone-convention-test\"");
     }
 
     private void writeBuildScript(String content) throws IOException {

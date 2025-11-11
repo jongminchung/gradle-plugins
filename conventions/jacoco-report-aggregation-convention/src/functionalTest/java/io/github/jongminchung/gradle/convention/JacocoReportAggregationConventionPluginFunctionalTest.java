@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,13 @@ class JacocoReportAggregationConventionPluginFunctionalTest {
     }
 
     private void writeSettings() throws IOException {
-        Files.writeString(projectDir.resolve("settings.gradle.kts"), "rootProject.name = \"jacoco-report-agg\"\ninclude(\"app\")");
+        Files.writeString(
+                projectDir.resolve("settings.gradle.kts"),
+                "rootProject.name = \"jacoco-report-agg\"\ninclude(\"app\")");
     }
 
     private void writeRootBuildScript() throws IOException {
-        Files.writeString(
-                projectDir.resolve("build.gradle.kts"),
-                """
+        Files.writeString(projectDir.resolve("build.gradle.kts"), """
                         plugins {
                             id("%s")
                             id("jacoco-report-aggregation")
@@ -45,16 +46,13 @@ class JacocoReportAggregationConventionPluginFunctionalTest {
                                 check(deps.any { it is org.gradle.api.artifacts.ProjectDependency && it.path == ":app" })
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
     }
 
     private void writeAppBuildScript() throws IOException {
         Path appDir = projectDir.resolve("app");
         Files.createDirectories(appDir);
-        Files.writeString(
-                appDir.resolve("build.gradle.kts"),
-                """
+        Files.writeString(appDir.resolve("build.gradle.kts"), """
                         plugins {
                             id("java")
                             jacoco

@@ -1,17 +1,18 @@
 package io.github.jongminchung.gradle.convention;
 
-import net.ltgt.gradle.errorprone.CheckSeverity;
-import net.ltgt.gradle.errorprone.ErrorProneOptions;
-import net.ltgt.gradle.errorprone.ErrorPronePlugin;
-import net.ltgt.gradle.nullaway.NullAwayExtension;
-import net.ltgt.gradle.nullaway.NullAwayOptions;
-import net.ltgt.gradle.nullaway.NullAwayPlugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.jspecify.annotations.NonNull;
+
+import net.ltgt.gradle.errorprone.CheckSeverity;
+import net.ltgt.gradle.errorprone.ErrorProneOptions;
+import net.ltgt.gradle.errorprone.ErrorPronePlugin;
+import net.ltgt.gradle.nullaway.NullAwayExtension;
+import net.ltgt.gradle.nullaway.NullAwayOptions;
+import net.ltgt.gradle.nullaway.NullAwayPlugin;
 
 public class ErrorproneConventionPlugin implements Plugin<@NonNull Project> {
     @Override
@@ -22,7 +23,8 @@ public class ErrorproneConventionPlugin implements Plugin<@NonNull Project> {
         project.getPluginManager().withPlugin("java", unused -> {
             project.getDependencies().add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, "org.jspecify:jspecify:1.0.0");
             project.getDependencies().add(ErrorPronePlugin.CONFIGURATION_NAME, "com.uber.nullaway:nullaway:0.12.10");
-            project.getDependencies().add(ErrorPronePlugin.CONFIGURATION_NAME, "com.google.errorprone:error_prone_core:2.43.0");
+            project.getDependencies()
+                    .add(ErrorPronePlugin.CONFIGURATION_NAME, "com.google.errorprone:error_prone_core:2.43.0");
 
             var nullawayExt = project.getExtensions().findByType(NullAwayExtension.class);
             if (nullawayExt != null) {

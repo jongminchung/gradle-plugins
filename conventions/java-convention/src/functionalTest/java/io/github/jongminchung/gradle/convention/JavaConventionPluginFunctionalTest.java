@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,7 @@ class JavaConventionPluginFunctionalTest {
     @Test
     void exposesJavadocAndSourcesTasksByDefault() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         plugins {
                             id("%s")
                             id("java")
@@ -36,8 +36,7 @@ class JavaConventionPluginFunctionalTest {
                                 }
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyJavaConvention");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
@@ -46,8 +45,7 @@ class JavaConventionPluginFunctionalTest {
     @Test
     void canDisablePluginViaExtension() throws IOException {
         writeSettings();
-        writeBuildScript(
-                """
+        writeBuildScript("""
                         plugins {
                             id("%s")
                             id("java")
@@ -67,8 +65,7 @@ class JavaConventionPluginFunctionalTest {
                                 }
                             }
                         }
-                        """
-                        .formatted(PLUGIN_ID));
+                        """.formatted(PLUGIN_ID));
 
         BuildResult result = runGradle("verifyJavaConventionDisabled");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
