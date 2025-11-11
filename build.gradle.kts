@@ -74,9 +74,7 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
 
     testing {
         suites {
-            if (this is JvmTestSuite) {
-                useJUnitJupiter()
-            }
+            withType<JvmTestSuite>().configureEach { useJUnitJupiter() }
 
             val test by getting(JvmTestSuite::class)
             val functionalTest by registering(JvmTestSuite::class) {

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class SpringBootConventionPluginFunctionalTest {
-
     private static final String PLUGIN_ID = "io.github.jongminchung.spring-boot.convention";
 
     @TempDir

@@ -4,7 +4,7 @@ java = "21"
 spotless = "7.2.1"
 palantirJavaFormat = "2.81.0"
 
-spring-boot = "4.0.0-RC1"
+spring-boot = "4.0.0-RC2"
 spring-dependency-management = "1.1.7"
 
 junit = "5.10.3"

@@ -22,19 +22,8 @@ class PublishMavenConventionPluginFunctionalTest {
         writeSettings();
         writeBuildScript(
                 """
-                        import org.gradle.api.publish.Publication
-
-                        open class RecordingPublication(private val publicationName: String) : Publication {
-                            var withBuildIdentifierCalled = false
-
-                            override fun getName(): String = publicationName
-                            override fun withoutBuildIdentifier() {
-                                withBuildIdentifierCalled = false
-                            }
-                            override fun withBuildIdentifier() {
-                                withBuildIdentifierCalled = true
-                            }
-                        }
+                        import org.gradle.api.publish.internal.PublicationInternal
+                        import org.gradle.api.publish.maven.MavenPublication
 
                         plugins {
                             id("%s")
@@ -42,12 +31,19 @@ class PublishMavenConventionPluginFunctionalTest {
                             `maven-publish`
                         }
 
-                        val recordingPublication = RecordingPublication("recording")
-                        publishing.publications.add(recordingPublication)
+                        publishing {
+                            publications {
+                                create<MavenPublication>("recording") {
+                                    from(components["java"])
+                                }
+                            }
+                        }
 
                         tasks.register("verifyMavenPublishConvention") {
                             doLast {
-                                check(recordingPublication.withBuildIdentifierCalled) {
+                                val publication =
+                                    publishing.publications.getByName("recording") as PublicationInternal<*>
+                                check(publication.isPublishBuildId) {
                                     "Build identifier should be enabled on publications"
                                 }
                             }

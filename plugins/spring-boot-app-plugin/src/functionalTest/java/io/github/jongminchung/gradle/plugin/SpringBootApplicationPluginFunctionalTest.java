@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class SpringBootApplicationPluginFunctionalTest {
-
     private static final String PLUGIN_ID = "io.github.jongminchung.spring-boot-app";
 
     @TempDir
@@ -26,18 +25,38 @@ class SpringBootApplicationPluginFunctionalTest {
                             id("%s")
                         }
 
+                        val expectedPluginIds =
+                            listOf(
+                                "java",
+                                "io.github.jongminchung.java.convention",
+                                "org.springframework.boot",
+                                "io.github.jongminchung.spring-boot.convention",
+                                "io.spring.dependency-management",
+                                "jacoco-report-aggregation",
+                                "io.github.jongminchung.jacoco-report-aggregation.convention",
+                                "jacoco",
+                                "io.github.jongminchung.jacoco.convention",
+                                "maven-publish",
+                                "io.github.jongminchung.maven-publish.convention",
+                                "jvm-test-suite",
+                                "io.github.jongminchung.jvm-test-suite.convention",
+                                "io.github.jongminchung.errorprone.convention",
+                                "io.freefair.lombok",
+                            )
+
                         tasks.register("verifySpringBootAppPlugin") {
                             doLast {
-                                check(pluginManager.hasPlugin("org.springframework.boot"))
-                                check(pluginManager.hasPlugin("io.github.jongminchung.spring-boot.convention"))
-                                check(pluginManager.hasPlugin("io.github.jongminchung.java.convention"))
-                                check(pluginManager.hasPlugin("io.github.jongminchung.jvm-test-suite.convention"))
+                                expectedPluginIds.forEach { pluginId ->
+                                    require(pluginManager.hasPlugin(pluginId)) {
+                                        "Expected plugin '$pluginId' to be applied"
+                                    }
+                                }
                             }
                         }
                         """
                         .formatted(PLUGIN_ID));
 
-        BuildResult result = runGradle("verifySpringBootAppPlugin");
+        var result = runGradle("verifySpringBootAppPlugin");
         assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
     }
 
