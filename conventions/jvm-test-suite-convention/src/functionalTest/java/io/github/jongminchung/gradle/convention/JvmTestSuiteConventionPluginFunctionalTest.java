@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class JvmTestSuiteConventionPluginFunctionalTest {
-
     private static final String PLUGIN_ID = "io.github.jongminchung.jvm-test-suite.convention";
 
     @TempDir
@@ -33,14 +32,14 @@ class JvmTestSuiteConventionPluginFunctionalTest {
 
                         tasks.register("verifyJvmTestSuites") {
                             doLast {
-                                val testing = extensions.getByType(TestingExtension::class)
+                                val testing = project.extensions.getByType(TestingExtension::class)
                                 val functional = testing.suites.findByName("functionalTest") as JvmTestSuite?
                                 check(functional != null) { "functionalTest suite missing" }
 
                                 val integration = testing.suites.findByName("integrationTest") as JvmTestSuite?
                                 check(integration != null) { "integrationTest suite missing" }
 
-                                val functionalImpl = configurations.getByName("functionalTestImplementation")
+                                val functionalImpl = project.configurations.getByName("functionalTestImplementation")
                                 check(functionalImpl.extendsFrom.any { it.name == "implementation" }) {
                                     "functionalTestImplementation should extend from implementation"
                                 }

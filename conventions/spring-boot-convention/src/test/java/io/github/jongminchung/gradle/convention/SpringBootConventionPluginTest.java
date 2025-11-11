@@ -13,10 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.gradle.plugin.SpringBootPlugin;
 
 class SpringBootConventionPluginTest {
-
     @Test
     void addsSpringBootDependenciesWhenSpringPluginApplied() {
-        Project project = ProjectBuilder.builder().build();
+        var project = ProjectBuilder.builder().build();
 
         project.getPluginManager().apply(JavaPlugin.class);
         project.getPluginManager().apply(SpringBootPlugin.class);
@@ -24,15 +23,15 @@ class SpringBootConventionPluginTest {
 
         evaluate(project);
 
-        Configuration implementation =
+        var implementation =
                 project.getConfigurations().getByName(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME);
         assertThat(implementation.getDependencies())
                 .anyMatch(dep -> "org.springframework.boot".equals(dep.getGroup())
                         && "spring-boot-starter".equals(dep.getName()));
 
-        Configuration testImplementation =
+        var testImplementation =
                 project.getConfigurations().getByName(JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME);
-        ModuleDependency starterTest = (ModuleDependency) testImplementation.getDependencies().stream()
+        var starterTest = (ModuleDependency) testImplementation.getDependencies().stream()
                 .filter(dep -> "org.springframework.boot".equals(dep.getGroup())
                         && "spring-boot-starter-test".equals(dep.getName()))
                 .findFirst()
@@ -41,7 +40,7 @@ class SpringBootConventionPluginTest {
                 .anyMatch(rule -> "org.junit.vintage".equals(rule.getGroup())
                         && "junit-vintage-engine".equals(rule.getModule()));
 
-        Configuration testRuntimeOnly =
+        var testRuntimeOnly =
                 project.getConfigurations().getByName(JavaPlugin.TEST_RUNTIME_ONLY_CONFIGURATION_NAME);
         assertThat(testRuntimeOnly.getDependencies())
                 .anyMatch(dep -> "org.junit.platform".equals(dep.getGroup())
@@ -50,7 +49,7 @@ class SpringBootConventionPluginTest {
 
     @Test
     void bootBuildInfoDependsOnCompileJava() {
-        Project project = ProjectBuilder.builder().build();
+        var project = ProjectBuilder.builder().build();
 
         project.getPluginManager().apply(JavaPlugin.class);
         project.getPluginManager().apply(SpringBootPlugin.class);
@@ -58,11 +57,13 @@ class SpringBootConventionPluginTest {
 
         evaluate(project);
 
-        Task compileJava = project.getTasks().getByName("compileJava");
-        Task bootBuildInfo = project.getTasks().getByName("bootBuildInfo");
+        var compileJava = project.getTasks().getByName("compileJava");
+        var bootBuildInfo = project.getTasks().getByName("bootBuildInfo");
 
-        assertThat(bootBuildInfo.getDependsOn()).contains(compileJava);
-        assertThat(bootBuildInfo.getMustRunAfter().getDependencies(bootBuildInfo)).contains(compileJava);
+        assertThat(bootBuildInfo.getTaskDependencies().getDependencies(bootBuildInfo))
+                .anyMatch(task -> task.getName().equals(compileJava.getName()));
+        assertThat(bootBuildInfo.getMustRunAfter().getDependencies(bootBuildInfo))
+                .anyMatch(task -> task.getName().equals(compileJava.getName()));
     }
 
     private static void evaluate(Project project) {

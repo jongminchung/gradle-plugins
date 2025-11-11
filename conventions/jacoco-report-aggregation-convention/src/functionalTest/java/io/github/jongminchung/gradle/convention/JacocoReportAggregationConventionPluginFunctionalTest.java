@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class JacocoReportAggregationConventionPluginFunctionalTest {
-
     private static final String PLUGIN_ID = "io.github.jongminchung.jacoco-report-aggregation.convention";
 
     @TempDir
@@ -37,12 +36,12 @@ class JacocoReportAggregationConventionPluginFunctionalTest {
                 """
                         plugins {
                             id("%s")
-                            jacoco-report-aggregation
+                            id("jacoco-report-aggregation")
                         }
 
                         tasks.register("verifyAggregation") {
                             doLast {
-                                val deps = configurations.getByName("jacocoAggregation").dependencies
+                                val deps = project.configurations.getByName("jacocoAggregation").dependencies
                                 check(deps.any { it is org.gradle.api.artifacts.ProjectDependency && it.path == ":app" })
                             }
                         }

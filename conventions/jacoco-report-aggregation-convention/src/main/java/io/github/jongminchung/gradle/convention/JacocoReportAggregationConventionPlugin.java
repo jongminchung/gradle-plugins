@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
 public class JacocoReportAggregationConventionPlugin implements Plugin<@NotNull Project> {
     @Override
     public void apply(Project target) {
-        target.afterEvaluate(project -> {
-            var pluginManager = project.getPluginManager();
+        target.getGradle().projectsEvaluated(gradle -> {
+            var pluginManager = target.getPluginManager();
 
             pluginManager.withPlugin("jacoco-report-aggregation", appliedPlugin -> {
-                var deps = project.getDependencies();
+                var deps = target.getDependencies();
 
-                project.getAllprojects().stream()
-                        .filter(p -> p.getPluginManager().hasPlugin("jacoco"))
-                        .filter(p -> p != project)
-                        .forEach(p -> deps.add(
-                                JACOCO_AGGREGATION_CONFIGURATION_NAME, deps.project(Map.of("path", p.getPath()))));
+                target.getAllprojects().stream()
+                        .filter(project -> project.getPluginManager().hasPlugin("jacoco"))
+                        .filter(project -> project != target)
+                        .forEach(project -> deps.add(
+                                JACOCO_AGGREGATION_CONFIGURATION_NAME, deps.project(Map.of("path", project.getPath()))));
             });
         });
     }

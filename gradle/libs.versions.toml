@@ -7,8 +7,7 @@ palantirJavaFormat = "2.81.0"
 spring-boot = "4.0.0-RC2"
 spring-dependency-management = "1.1.7"
 
-junit = "5.10.3"
-assertj = "3.26.0"
+junit = "6.0.1"
 
 [libraries]
 swagger-parser = { module = "io.swagger.parser.v3:swagger-parser", version = "2.1.31" }
@@ -25,8 +24,8 @@ gradle-lombok = { module = "io.freefair.lombok:io.freefair.lombok.gradle.plugin"
 
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+assertj-core = { module = "org.assertj:assertj-core", version = "3.27.6" }
 
 [plugins]
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-gradle-plugin-publish = { id = "com.gradle.plugin-publish", version = "2.0.0" }
+maven-publish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }

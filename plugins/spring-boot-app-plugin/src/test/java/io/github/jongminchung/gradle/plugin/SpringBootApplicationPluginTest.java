@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.gradle.plugin.SpringBootPlugin;
 
 class SpringBootApplicationPluginTest {
-
     @Test
     void appliesAllRequiredPlugins() {
         Project project = ProjectBuilder.builder().build();

@@ -13,9 +13,5 @@ gradlePlugin {
 dependencies {
     compileOnly(libs.gradle.spring.boot)
     testImplementation(libs.gradle.spring.boot)
+    functionalTestRuntimeOnly(libs.gradle.spring.boot)
 }
-
-// configurations.compileOnly.get().isCanBeResolved = true
-// tasks.withType<PluginUnderTestMetadata> {
-//    pluginClasspath.from(configurations.compileOnly)
-// }

@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class JavaConventionPluginFunctionalTest {
-
     private static final String PLUGIN_ID = "io.github.jongminchung.java.convention";
 
     @TempDir
