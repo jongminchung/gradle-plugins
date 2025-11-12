@@ -1,6 +1,4 @@
-.idea/**
-!.idea/
-!.idea/icon.svg
+.idea/
 
 # Ignore Gradle project-specific cache directory
 .gradle
