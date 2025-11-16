@@ -1,3 +1,27 @@
+<!-- TOC -->
+
+* [Understanding the gradle fundamentals](#understanding-the-gradle-fundamentals)
+    * [Lifecycle](#lifecycle)
+    * [Defining Tasks](#defining-tasks)
+        * [Common Task Properties](#common-task-properties)
+    * [Locating Tasks](#locating-tasks)
+        * [요약](#요약)
+    * [Task Dependencies and Ordering](#task-dependencies-and-ordering)
+    * [📌 핵심 차이 요약](#-핵심-차이-요약)
+    * [📌 A와 B로 보는 간단 정리](#-a와-b로-보는-간단-정리)
+    * [📌 예시 코드 (Kotlin DSL)](#-예시-코드-kotlin-dsl)
+    * [Task inputs and outputs](#task-inputs-and-outputs)
+        * [예시](#예시)
+    * [Repositories and Dependencies](#repositories-and-dependencies)
+        * [pom.xml artifact를 배포할 때 "transitive dependencies" 정보는 어떠한 역할을 할까?](#pomxml-artifact를-배포할-때-transitive-dependencies-정보는-어떠한-역할을-할까)
+    * [Java plugin task graph](#java-plugin-task-graph)
+    * [Lombok과 Annotation Processor의 동작 원리](#lombok과-annotation-processor의-동작-원리)
+        * [Annotation Processor 동작 과정](#annotation-processor-동작-과정)
+        * [JSR 269 - Pluggable Annotation Processing API](#jsr-269---pluggable-annotation-processing-api)
+        * [Lombok의 동작 방식](#lombok의-동작-방식)
+
+<!-- TOC -->
+
 # Understanding the gradle fundamentals
 
 - **Task**: "Actions" 🏃‍♂️
@@ -228,7 +252,6 @@ Maven 중앙 저장소 등에 artifact를 업로드할 때는 보통:
 
 즉, “이 artifact가 가진 딜리버리 의존성 목록” 이를 통해 Maven은 트랜지티브 의존성을 자동으로 해결할 수 있다.
 
-
 ```kotlin
 // settings.gradle.kts
 dependencyResolutionManagement {
@@ -245,4 +268,156 @@ pluginManagement {
         mavenLocal()
     }
 }
+```
+
+## Java plugin task graph
+
+```text
+:build
+├─ :assemble
+│  └─ :jar
+│     └─ :classes
+│        ├─ :compileJava
+│        └─ :processResources
+└─ :check
+   └─ :test
+      ├─ :testClasses
+      │  ├─ :compileTestJava
+      │  │  └─ :classes
+      │  │     ├─ :compileJava
+      │  │     └─ :processResources
+      │  └─ :processTestResources
+      └─ :classes
+         ├─ :compileJava
+         └─ :processResources
+```
+
+## Lombok과 Annotation Processor의 동작 원리
+
+Annotation Processor는 컴파일 시점에 애노테이션을 읽고 코드를 생성하거나 수정합니다.
+Lombok은 getter/setter 등을 자동 생성하여 바이트코드에 반영하며,
+Gradle의 annotationProcessor 구성으로 컴파일러에 등록됩니다.
+
+### Annotation Processor 동작 과정
+
+```text
+일반적인 컴파일:
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│   .java      │ -> │   javac      │ -> │   .class     │
+│  소스 파일     │    │   컴파일러     │    │    바이트코드   │
+└──────────────┘    └──────────────┘    └──────────────┘
+
+Annotation Processing 포함:
+┌──────────────┐    ┌──────────────────────────────┐    ┌──────────────┐
+│   .java      │    │         javac                │    │   .class     │
+│  소스 파일     │ -> │  1. Parse (구문 분석)           │ -> │ 바이트코드     │
+│ @Getter      │    │  2. Annotation Processing     │    │ getX() 포함! │
+└──────────────┘    │  3. Analyze & Generate        │    └──────────────┘
+                    │  4. Compile                   │
+                    └──────────────────────────────┘
+                              ↑
+                    ┌─────────┴─────────┐
+                    │ Annotation        │
+                    │ Processor         │
+                    │ (Lombok)          │
+                    └───────────────────┘
+```
+
+### JSR 269 - Pluggable Annotation Processing API
+
+JSR 269는 Java 컴파일러에서 애노테이션 프로세서를 플러그인 방식으로 통합할 수 있는 API를 정의합니다.
+이를 통해 개발자는 커스텀 애노테이션 프로세서를 작성하여 컴파일 시점에 코드를 생성하거나 수정할 수 있습니다.
+
+```java
+// Annotation Processor의 기본 구조
+
+import javax.annotation.processing.*;
+import javax.lang.model.element.*;
+import java.util.Set;
+
+@SupportedAnnotationTypes("com.example.MyAnnotation")
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
+public class MyAnnotationProcessor extends AbstractProcessor {
+
+    /**
+     * 컴파일러가 각 라운드마다 호출
+     * @return true면 이 애노테이션은 다른 프로세서가 처리하지 않음
+     */
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations,
+                           RoundEnvironment roundEnv) {
+
+        // 1. 애노테이션이 붙은 요소들을 찾기
+        for (Element element : roundEnv.getElementsAnnotatedWith(MyAnnotation.class)) {
+
+            // 2. 요소 정보 분석
+            String className = element.getSimpleName().toString();
+
+            // 3. 코드 생성 (새 파일 작성)
+            try {
+                JavaFileObject builderFile = processingEnv.getFiler()
+                        .createSourceFile(className + "Generated");
+
+                // 4. 생성된 파일에 코드 작성
+                // ... 코드 생성 로직
+
+            } catch (IOException e) {
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "Failed to generate code: " + e.getMessage()
+                );
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+### Lombok의 동작 방식
+
+```java
+// 일반적인 Annotation Processor: 새 파일 생성만 가능
+@AutoValue  // 새로운 클래스 생성
+public abstract class Person {
+    abstract String name();
+    // -> PersonAutoValue_Person.class 생성
+}
+
+// Lombok: 기존 파일을 수정! (비표준 방식)
+@Getter
+@Setter  // 같은 클래스에 메서드 추가
+public class Person {
+    private String name;
+    // -> Person.class에 getName(), setName() 추가됨!
+}
+```
+
+```text
+Lombok의 동작 과정:
+
+1. javac가 소스 파일을 읽고 AST(Abstract Syntax Tree) 생성
+   
+   Person.java
+   ↓
+   AST: class Person {
+       field: name (private String)
+   }
+
+2. Lombok Annotation Processor 실행
+   - @Getter 애노테이션 발견
+   - AST를 직접 수정 (⚠️ 비표준!)
+   
+   AST: class Person {
+       field: name (private String)
+       method: getName() { return this.name; }  ← 추가!
+       method: setName(String name) { this.name = name; }  ← 추가!
+   }
+
+3. 수정된 AST를 바이트코드로 컴파일
+   
+   Person.class
+   - getName()
+   - setName()
+   포함된 바이트코드 생성!
 ```
