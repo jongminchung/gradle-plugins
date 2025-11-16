@@ -143,9 +143,6 @@ configure(subprojects.filter { !it.name.endsWith("example") }) {
         testRuntimeOnly(versionCatalog.junit.jupiter.engine)
     }
 
-    /**
-     * Default Maven publication configuration for all subprojects
-     */
     extensions.configure<MavenPublishBaseExtension> {
         signAllPublications()
 

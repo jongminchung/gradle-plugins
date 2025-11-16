@@ -4,10 +4,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "gradle-plugins"
 
-// includeBuild("swagger-merger-plugin")
-// includeBuild("api-docs-plugin")
-// include(":test-oas")
-
 include("spring-boot-app-example")
 project(":spring-boot-app-example").projectDir = file("$rootDir/examples/spring-boot-app-example")
 
@@ -25,7 +21,7 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         mavenLocal()
-        gradlePluginPortal()
+        gradlePluginPortal() // For resolving Gradle plugins library dependencies
     }
 }
 
