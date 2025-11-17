@@ -1,5 +1,5 @@
 plugins {
-    id("io.github.jongminchung.spring-boot-app") version "0.0.1"
+    id("io.github.jongminchung.spring-boot-app") version "0.0.2-RC1"
 }
 
 java {
