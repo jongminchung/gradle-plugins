@@ -1,0 +1,20 @@
+SummaryResponse:
+  allOf:
+    - $ref: "#/BaseResponse"
+
+BaseResponse:
+  type: object
+  required:
+    - id
+    - name
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      $ref: "./category-common.yml#/Id"
+    name:
+      $ref: "../common/resource-name.yml#/ResourceName"
+    createdAt:
+      $ref: "../common/audit.yml#/CreatedAt"
+    updatedAt:
+      $ref: "../common/audit.yml#/UpdatedAt"

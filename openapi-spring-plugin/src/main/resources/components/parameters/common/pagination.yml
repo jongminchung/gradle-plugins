@@ -1,0 +1,21 @@
+Size:
+  in: query
+  name: size
+  description: 페이지당 갯수
+  required: false
+  schema:
+    type: integer
+    format: int32
+    minimum: 1
+    default: 10
+
+Page:
+  in: query
+  name: page
+  description: 페이지
+  required: false
+  schema:
+    type: integer
+    format: int32
+    minimum: 1
+    default: 1

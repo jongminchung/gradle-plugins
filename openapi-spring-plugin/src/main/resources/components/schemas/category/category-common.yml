@@ -1,0 +1,4 @@
+Id:
+  type: string
+  format: uuid
+  description: 카테고리 ID

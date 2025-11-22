@@ -1,0 +1,33 @@
+CreateRequest:
+  type: object
+  required:
+    - name
+    - photoUrls
+  properties:
+    name:
+      $ref: "../common/resource-name.yml#/ResourceName"
+    photoUrls:
+      type: array
+      items:
+        $ref: "../common/object-storage-url.yml#/ObjectStorageUrl"
+
+UpdateRequest:
+  type: object
+  required:
+    - name
+    - photoUrls
+  properties:
+    name:
+      $ref: "../common/resource-name.yml#/ResourceName"
+    photoUrls:
+      type: array
+      items:
+        $ref: "../common/object-storage-url.yml#/ObjectStorageUrl"
+    categoryId:
+      $ref: "../category/category-common.yml#/Id"
+    tagIds:
+      type: array
+      items:
+        $ref: "../tag/tag-common.yml#/Id"
+    status:
+      $ref: "../pet/pet-common.yml#/Status"

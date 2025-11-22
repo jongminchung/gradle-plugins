@@ -1,0 +1,51 @@
+CollectionResponse:
+  type: object
+  required:
+    - items
+  properties:
+    items:
+      type: array
+      items:
+        $ref: "#/SummaryResponse"
+
+SummaryResponse:
+  allOf:
+    - $ref: "#/BaseResponse"
+
+DetailResponse:
+  allOf:
+    - $ref: "#/BaseResponse"
+
+BaseResponse:
+  type: object
+  required:
+    - id
+    - name
+    - category
+    - photoUrls
+    - tags
+    - status
+    - createdAt
+    - updatedAt
+  properties:
+    id:
+      $ref: "./pet-common.yml#/Id"
+    name:
+      $ref: "../common/resource-name.yml#/ResourceName"
+    category:
+      $ref: "../category/category-response.yml#/SummaryResponse"
+    photoUrls:
+      type: array
+      items:
+        $ref: "../common/object-storage-url.yml#/ObjectStorageUrl"
+        description: 애완 동물 이미지 URL
+    tags:
+      type: array
+      items:
+        $ref: "../tag/tag-response.yml#/SummaryResponse"
+    status:
+      $ref: "./pet-common.yml#/Status"
+    createdAt:
+      $ref: "../common/audit.yml#/CreatedAt"
+    updatedAt:
+      $ref: "../common/audit.yml#/UpdatedAt"

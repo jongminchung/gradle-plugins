@@ -1,0 +1,5 @@
+Location:
+  description: Location 헤더 ([RFC-9110](https://datatracker.ietf.org/doc/html/rfc9110))
+  schema:
+    type: string
+    format: url

@@ -1,0 +1,83 @@
+Collection:
+  post:
+    operationId: Collection.post
+    tags:
+      - Pet
+    summary: Pet 생성
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/pet/pet-request.yml#/CreateRequest"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/pet/pet-response.yml#/SummaryResponse"
+
+  get:
+    operationId: Collection.get
+    tags:
+      - Pet
+    summary: Pet 목록 조회
+    parameters:
+      - $ref: "../components/parameters/common/pagination.yml#/Page"
+      - $ref: "../components/parameters/common/pagination.yml#/Size"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/pet/pet-response.yml#/CollectionResponse"
+
+
+ById:
+  parameters:
+    - $ref: "../components/parameters/pet.yml#/PetId"
+
+  get:
+    operationId: ById.get
+    tags:
+      - Pet
+    summary: Pet 조회
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/pet/pet-response.yml#/DetailResponse"
+
+  put:
+    operationId: ById.put
+    tags:
+      - Pet
+    summary: Pet 정보 변경
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/pet/pet-request.yml#/UpdateRequest"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/pet/pet-response.yml#/SummaryResponse"
+
+  delete:
+    operationId: ById.delete
+    tags:
+      - Pet
+    summary: Pet 삭제
+    responses:
+      202:
+        $ref: "../components/responses/index.yml#/AcceptedResponse"
+      204:
+        $ref: "../components/responses/index.yml#/DeletedResponse"

@@ -1,0 +1,9 @@
+CreatedAt:
+  type: string
+  description: 생성 일자
+  format: date-time
+
+UpdatedAt:
+  type: string
+  description: 변경 일자
+  format: date-time

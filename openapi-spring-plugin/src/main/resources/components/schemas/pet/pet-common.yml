@@ -1,0 +1,12 @@
+Id:
+  type: string
+  format: uuid
+  description: 애완 동물 ID
+  example: 123e4567-e89b-12d3-a456-426614174000
+
+Status:
+  type: string
+  enum:
+    - available
+    - pending
+    - sold
