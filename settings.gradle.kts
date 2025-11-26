@@ -6,7 +6,7 @@ rootProject.name = "gradle-plugins"
 
 includeBuild("convention-plugins")
 
-includeBuild("openapi-spring-plugin")
+includeBuild("openapi-spring-generator-plugin")
 
 includeBuild("examples/spring-boot-app-example")
 

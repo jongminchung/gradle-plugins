@@ -15,8 +15,8 @@ project.description =
 gradlePlugin {
     plugins {
         create("openapi-spring") {
-            implementationClass = "io.github.jongminchung.gradle.plugin.OpenApiSpringPlugin"
-            id = "io.github.jongminchung.openapi-spring"
+            implementationClass = "io.github.jongminchung.gradle.plugin.OpenApiSpringGeneratorPlugin"
+            id = "io.github.jongminchung.openapi-spring-generator"
             displayName = "Gradle plugin for OpenAPI Specification based Spring Boot code generation"
             description = project.description
             tags =

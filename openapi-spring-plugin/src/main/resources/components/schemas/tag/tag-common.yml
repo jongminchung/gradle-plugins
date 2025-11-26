@@ -1,4 +1,0 @@
-Id:
-  type: string
-  format: uuid
-  description: 태그 ID

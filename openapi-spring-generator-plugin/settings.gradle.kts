@@ -1,10 +1,12 @@
-rootProject.name = "openapi-spring-plugin"
+@file:Suppress("UnstableApiUsage")
+
+rootProject.name = "openapi-spring-generator-plugin"
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
         mavenLocal()
-        gradlePluginPortal() // For resolving Gradle plugins library dependencies
+        gradlePluginPortal()
     }
 
     versionCatalogs {

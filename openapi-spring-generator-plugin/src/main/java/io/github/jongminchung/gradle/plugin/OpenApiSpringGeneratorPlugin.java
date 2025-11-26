@@ -3,6 +3,7 @@ package io.github.jongminchung.gradle.plugin;
 import com.github.gradle.node.NodeExtension;
 import com.github.gradle.node.NodePlugin;
 import com.github.gradle.node.npm.task.NpxTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
@@ -14,10 +15,19 @@ import org.jspecify.annotations.NonNull;
 import org.openapitools.generator.gradle.plugin.OpenApiGeneratorPlugin;
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
-public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
+import static java.nio.file.Files.copy;
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
+public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
     private static final String GROUP_NAME = "openapi";
 
     private static final String LINT_TASK_NAME = "lintOpenApiSpec";
@@ -40,21 +50,23 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
 
         target.getExtensions().configure(NodeExtension.class, node -> {
             node.getDownload().set(true);
-            node.getVersion().set("24.11.1");
+            node.getVersion().set("24.11.0");
+            node.getWorkDir().set(target.getLayout().getProjectDirectory().dir(".gradle/nodejs"));
+            node.getNpmWorkDir().set(target.getLayout().getProjectDirectory().dir(".gradle/npm"));
         });
 
-        var extension = target.getExtensions().create("openapiSpring", OpenApiSpringExtension.class);
+        var extension = target.getExtensions().create("openapiSpringGenerator", OpenApiSpringGeneratorExtension.class);
 
         extension.getInputFile().convention(
                 target.getLayout()
                         .getProjectDirectory()
                         .dir(GROUP_NAME)
-                        .file("openapi-spec.yml")
+                        .file("openapi-spec.yaml")
         );
         extension.getOutputFile().convention(
                 target.getLayout()
                         .getBuildDirectory()
-                        .file("openapi/openapi-spec.yml")
+                        .file("openapi/openapi-spec.yaml")
         );
 
         registerLintTask(target, extension);
@@ -62,7 +74,7 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
         registerGenerateTask(target, extension);
     }
 
-    private void registerGenerateTask(Project project, OpenApiSpringExtension extension) {
+    private void registerGenerateTask(Project project, OpenApiSpringGeneratorExtension extension) {
         var output = project.getLayout().getBuildDirectory().dir(GENERATED_OPENAPI_PATH);
 
         var generateTaskProvider = project.getTasks().register(GENERATE_TASK_NAME, GenerateTask.class, task -> {
@@ -84,6 +96,13 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
             props.put("artifactVersion", project.getVersion().toString());
             props.put("groupId", project.getGroup().toString());
 
+            String basePackage = project.getGroup() + ".openapi";
+            props.put("basePackage", basePackage);
+            props.put("apiPackage", basePackage);
+            props.put("modelPackage", basePackage + ".dto");
+            props.put("configPackage", basePackage + ".config");
+            props.put("invokerPackage", basePackage);
+
             props.put("interfaceOnly", "true"); // 인터페이스만 생성
             props.put("useBeanValidation", "true"); // JSR303, JSR380 bean validation annotation
 
@@ -94,23 +113,45 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
             props.put("documentationProvider", "none");
             props.put("hideGenerationTimestamp", "true");
             props.put("useSpringBoot3", "true");
+            props.put("useResponseEntity", "true");
+
+            // Only Lombok (java)
+            props.put("generateConstructorWithAllArgs", "false");
+            props.put("generateConstructorWithRequiredArgs", "false");
+            props.put("generatedConstructorWithAllArgs", "false"); // 일부 템플릿에서 사용
+            props.put("generatedConstructorWithRequiredArgs", "false");
+            props.put("generateBuilders", "false");
+
+            props.put("additionalModelTypeAnnotations",
+                    String.join("\n",
+                            "@lombok.Builder(toBuilder = true)",
+                            "@lombok.Getter",
+                            "@lombok.NoArgsConstructor",
+                            "@lombok.AllArgsConstructor"
+                    ));
 
             task.getAdditionalProperties().set(props);
         });
 
-        project.getExtensions().configure(SourceSetContainer.class, sourceSets -> sourceSets.getByName("main").getJava().srcDirs(output));
+        project.getExtensions().configure(SourceSetContainer.class, sourceSets ->
+                sourceSets.getByName("main").getJava().srcDirs(output.map(dir -> dir.dir("src/main/java"))));
 
         project.getTasks().named(JavaPlugin.COMPILE_JAVA_TASK_NAME, JavaCompile.class)
                 .configure(task -> task.dependsOn(generateTaskProvider));
     }
 
-    private void registerLintTask(Project project, OpenApiSpringExtension extension) {
+    private void registerLintTask(Project project, OpenApiSpringGeneratorExtension extension) {
         project.getTasks().register(LINT_TASK_NAME, NpxTask.class, task -> {
             task.setGroup(GROUP_NAME);
             task.setDescription("Lint OpenAPI specification using Redocly CLI.");
             task.getInputs().dir(extension.getInputFile().map(f ->
                     f.getAsFile().getParentFile()
             ));
+
+            var markerFileProvider = project.getLayout().getBuildDirectory()
+                    .dir(GROUP_NAME)
+                    .map(dir -> dir.file("lint-success.marker"));
+            task.getOutputs().file(markerFileProvider);
 
             task.getCommand().set("npx");
             task.getArgs().set(
@@ -121,12 +162,21 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
                                     input.getAsFile().getAbsolutePath()
                             ))
             );
+
+            task.doLast(t -> {
+                try {
+                    var message = "Lint Success at: " + LocalDateTime.now(ZoneId.systemDefault());
+                    Files.writeString(markerFileProvider.get().getAsFile().toPath(), message);
+                } catch (Exception e) {
+                    throw new GradleException("Failed to update lint marker file", e);
+                }
+            });
         });
     }
 
-    private static void registerBundleTask(
+    private void registerBundleTask(
             Project project,
-            OpenApiSpringExtension extension
+            OpenApiSpringGeneratorExtension extension
     ) {
         project.getTasks().register(BUNDLE_TASK_NAME, NpxTask.class, task -> {
             task.dependsOn(project.getTasks().named(LINT_TASK_NAME));
@@ -152,6 +202,20 @@ public class OpenApiSpringPlugin implements Plugin<@NonNull Project> {
                     });
 
             task.getArgs().set(argsProvider);
+
+            task.doLast(t -> {
+                var outputDir = extension.getOutputFile().get().getAsFile().getParentFile();
+                var outputFile = outputDir.toPath().resolve("index.html");
+                try (var input = Objects.requireNonNull(
+                        getClass().getClassLoader().getResourceAsStream("redoc.html"),
+                        "redoc.html resource not found in plugin jar"
+                )) {
+                    createDirectories(outputDir.toPath());
+                    copy(input, outputFile, REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new GradleException("Failed to copy API docs", e);
+                }
+            });
         });
     }
 }
