@@ -1,6 +1,0 @@
-extends:
-  - recommended
-
-theme:
-  openapi:
-    htmlTemplate: ./templates.hbs

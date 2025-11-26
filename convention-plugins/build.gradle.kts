@@ -52,7 +52,7 @@ allprojects {
             trimTrailingWhitespace()
             importOrder("java", "jakarta", "org", "com", "net", "io", "lombok")
 
-            targetExclude("**/build/**") // Querydsl generated sources (source sets) are in the build directory
+            targetExclude("**/build/**")
         }
 
         kotlin {
