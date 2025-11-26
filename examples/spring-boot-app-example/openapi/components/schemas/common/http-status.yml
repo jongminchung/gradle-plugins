@@ -1,0 +1,6 @@
+HttpStatus:
+  type: integer
+  description: HTTP 상태 코드
+  format: int32
+  minimum: 100
+  maximum: 599

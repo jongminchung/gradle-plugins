@@ -1,0 +1,6 @@
+PetId:
+  name: petId
+  in: path
+  required: true
+  schema:
+    $ref: "../schemas/pet/pet-common.yml#/Id"
