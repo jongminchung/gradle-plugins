@@ -72,7 +72,18 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
         registerLintTask(target, extension);
         registerBundleTask(target, extension);
         registerGenerateTask(target, extension);
+//        hideNodeUtilityTaskGroups(target);
     }
+
+//    private void hideNodeUtilityTaskGroups(Project project) {
+//        var hiddenGroups = List.of("node", "npm", "pnpm", "yarn");
+//        project.getTasks().configureEach(task -> {
+//            var group = task.getGroup();
+//            if (group != null && hiddenGroups.contains(group)) {
+//                task.setGroup(null); // keep tasks functional but hide from Gradle task listings
+//            }
+//        });
+//    }
 
     private void registerGenerateTask(Project project, OpenApiSpringGeneratorExtension extension) {
         var output = project.getLayout().getBuildDirectory().dir(GENERATED_OPENAPI_PATH);
@@ -104,6 +115,7 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
             props.put("invokerPackage", basePackage);
 
             props.put("interfaceOnly", "true"); // 인터페이스만 생성
+            props.put("skipDefaultInterface", "true"); // default interface 기본적으로 생성되는 것을 막음
             props.put("useBeanValidation", "true"); // JSR303, JSR380 bean validation annotation
 
             props.put("dateLibrary", "java8");
@@ -114,21 +126,6 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
             props.put("hideGenerationTimestamp", "true");
             props.put("useSpringBoot3", "true");
             props.put("useResponseEntity", "true");
-
-            // Only Lombok (java)
-            props.put("generateConstructorWithAllArgs", "false");
-            props.put("generateConstructorWithRequiredArgs", "false");
-            props.put("generatedConstructorWithAllArgs", "false"); // 일부 템플릿에서 사용
-            props.put("generatedConstructorWithRequiredArgs", "false");
-            props.put("generateBuilders", "false");
-
-            props.put("additionalModelTypeAnnotations",
-                    String.join("\n",
-                            "@lombok.Builder(toBuilder = true)",
-                            "@lombok.Getter",
-                            "@lombok.NoArgsConstructor",
-                            "@lombok.AllArgsConstructor"
-                    ));
 
             task.getAdditionalProperties().set(props);
         });
@@ -144,8 +141,10 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
         project.getTasks().register(LINT_TASK_NAME, NpxTask.class, task -> {
             task.setGroup(GROUP_NAME);
             task.setDescription("Lint OpenAPI specification using Redocly CLI.");
-            task.getInputs().dir(extension.getInputFile().map(f ->
-                    f.getAsFile().getParentFile()
+
+            var inputDirProvider = extension.getInputFile().map(f -> f.getAsFile().getParentFile());
+            task.getInputs().files(inputDirProvider.map(dir ->
+                    project.fileTree(dir, tree -> tree.include("**/*.yaml", "**/*.yml", "**/*.json"))
             ));
 
             var markerFileProvider = project.getLayout().getBuildDirectory()
@@ -183,7 +182,10 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
 
             task.setGroup(GROUP_NAME);
             task.setDescription("Bundle OpenAPI specification using Redocly CLI.");
-            task.getInputs().file(extension.getInputFile());
+            var inputDirProvider = extension.getInputFile().map(f -> f.getAsFile().getParentFile());
+            task.getInputs().files(inputDirProvider.map(dir ->
+                    project.fileTree(dir, tree -> tree.include("**/*.yaml", "**/*.yml", "**/*.json"))
+            ));
             task.getOutputs().file(extension.getOutputFile());
 
             task.getCommand().set("npx");
