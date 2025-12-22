@@ -1,5 +1,0 @@
-ResourceName:
-  type: string
-  format: hostname
-  description: 리소스 이름 (RFC-1123)
-  maxLength: 255
