@@ -8,8 +8,6 @@ includeBuild("convention-plugins")
 
 includeBuild("openapi-spring-generator-plugin")
 
-includeBuild("examples/spring-boot-app-example")
-
 dependencyResolutionManagement {
     repositories {
         mavenCentral()

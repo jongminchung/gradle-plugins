@@ -20,3 +20,12 @@ allprojects {
         }
     }
 }
+
+val includedSpotlessApply = gradle.includedBuilds.map { it.task(":spotlessApply") }
+
+tasks.register("spotlessApplyAll") {
+    group = "formatting"
+    description = "Runs spotlessApply for root and included builds."
+    dependsOn("spotlessApply")
+    dependsOn(includedSpotlessApply)
+}

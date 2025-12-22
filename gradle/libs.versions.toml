@@ -1,7 +1,7 @@
 [versions]
 convention-plugin = "0.0.2"
 
-java = "25"
+java = "21"
 
 spotless = "7.2.1"
 palantirJavaFormat = "2.81.0"

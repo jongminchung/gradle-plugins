@@ -1,5 +1,7 @@
 plugins {
     `java-gradle-plugin`
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.spotless.convention)
 }
 
 dependencies {
