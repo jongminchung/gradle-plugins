@@ -38,6 +38,7 @@ API 문서를 자세하게 제공해야했습니다.
 
 - useSpringBoot3: spring boot 3.x 용 코드와 의존성을 생성 (useJakartaEe = true가 자동 활성화됨)
 - bigDecimalAsString: false (만약 이를 계산해서 제공해야한다면 Client 쪽에서 이를 제어하는게 맞음)
+
     - ```yaml
         components:
         schemas:
@@ -55,5 +56,6 @@ API 문서를 자세하게 제공해야했습니다.
           private BigDecimal amount; // bigDecimalAsStirng = false
       }
       ```
+
         - Java BigDecimal → JSON → JavaScript Number 로 갈 때, JS에서 정밀도가 깨지는 문제를 회피하려는 목적입니다.
 

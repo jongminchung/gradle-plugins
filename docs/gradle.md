@@ -1,3 +1,5 @@
+# Understanding the gradle fundamentals
+
 <!-- TOC -->
 
 * [Understanding the gradle fundamentals](#understanding-the-gradle-fundamentals)
@@ -22,10 +24,8 @@
 
 <!-- TOC -->
 
-# Understanding the gradle fundamentals
-
-- **Task**: "Actions" 🏃‍♂️
-- **Plugin**: "Add Tasks to Project" 🔌
+* **Task**: "Actions" 🏃‍♂️
+* **Plugin**: "Add Tasks to Project" 🔌
 
 ## Lifecycle
 
@@ -64,7 +64,7 @@ flowchart LR
     CONFIG --> EXEC
 ```
 
-- `Configure all tasks` 단계에서 모든 task가 메모리에 올라가고 설정이 완료됩니다. (Expensive)
+* `Configure all tasks` 단계에서 모든 task가 메모리에 올라가고 설정이 완료됩니다. (Expensive)
 
 **개선된 방식**
 
@@ -233,22 +233,22 @@ Maven에서 어떤 라이브러리를 의존성으로 추가하면,
              └── C 라이브러리
 ```
 
-- `A`만 추가해도 B와 C도 자동으로 프로젝트에 추가되는 것 -> transitive dependency
+* `A`만 추가해도 B와 C도 자동으로 프로젝트에 추가되는 것 -> transitive dependency
 
 ### pom.xml artifact를 배포할 때 "transitive dependencies" 정보는 어떠한 역할을 할까?
 
 Maven 중앙 저장소 등에 artifact를 업로드할 때는 보통:
 
-- `my-library-1.0.0.jar` (실제 코드)
-- `my-library-1.0.0.pom` (메타데이터)
+* `my-library-1.0.0.jar` (실제 코드)
+* `my-library-1.0.0.pom` (메타데이터)
 
 이 두 가지를 배포한다.
 
 여기서 .pom 파일 안에는 다음 정보가 포함된다:
 
-- 이 Artifact가 어떤 의존성을 가진다?
-- 그 의존성들의 scope은 무엇인가?
-- 버전은 어떤가?
+* 이 Artifact가 어떤 의존성을 가진다?
+* 그 의존성들의 scope은 무엇인가?
+* 버전은 어떤가?
 
 즉, “이 artifact가 가진 딜리버리 의존성 목록” 이를 통해 Maven은 트랜지티브 의존성을 자동으로 해결할 수 있다.
 
