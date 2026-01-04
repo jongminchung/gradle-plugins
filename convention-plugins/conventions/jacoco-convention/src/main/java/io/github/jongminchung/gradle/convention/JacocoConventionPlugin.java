@@ -12,20 +12,14 @@ public class JacocoConventionPlugin implements Plugin<@NonNull Project> {
 
         var extraJacocoExtension = extensions.create(ExtraJacocoExtension.EXTENSION_NAME, ExtraJacocoExtension.class);
 
-        project.afterEvaluate(evaluatedProject -> {
-            if (!extraJacocoExtension.getEnabled().get()) {
-                return;
-            }
+        project.getPluginManager().withPlugin("jacoco", plugin -> {
+            var reports = project.getTasks().withType(JacocoReport.class);
 
-            var pluginManager = evaluatedProject.getPluginManager();
-            pluginManager.withPlugin("jacoco", plugin -> {
-                var reports = evaluatedProject.getTasks().withType(JacocoReport.class);
-
-                reports.configureEach(task -> {
-                    task.getReports().getXml().getRequired().set(true);
-                    task.getReports().getHtml().getRequired().set(true);
-                    task.getReports().getCsv().getRequired().set(false);
-                });
+            reports.configureEach(task -> {
+                task.onlyIf(t -> extraJacocoExtension.getEnabled().get());
+                task.getReports().getXml().getRequired().set(true);
+                task.getReports().getHtml().getRequired().set(true);
+                task.getReports().getCsv().getRequired().set(false);
             });
         });
     }

@@ -39,28 +39,21 @@ public class SpringBootConventionPlugin implements Plugin<@NonNull Project> {
     }
 
     private void configureBootBuildInfo(Project project) {
-        project.afterEvaluate(p -> {
-            var tasks = p.getTasks();
-            if (tasks.findByName(BOOT_BUILD_INFO_TASK_NAME) == null) {
-                // Use reflection to avoid compile-time dependency on SpringBootExtension
-                var springBootExt = p.getExtensions().findByName(SPRING_BOOT_EXTENSION_NAME);
-                if (springBootExt != null) {
-                    try {
-                        var buildInfoMethod = springBootExt.getClass().getMethod("buildInfo");
-                        buildInfoMethod.invoke(springBootExt);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to configure bootBuildInfo", e);
-                    }
-                }
+        // Use withType(Object.class) or search for extension manually inside a lambda
+        // Spring Boot plugin ensures the extension exists before this is called
+        project.getExtensions().configure(SPRING_BOOT_EXTENSION_NAME, springBootExt -> {
+            try {
+                var buildInfoMethod = springBootExt.getClass().getMethod("buildInfo");
+                buildInfoMethod.invoke(springBootExt);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to call buildInfo() on springBoot extension", e);
             }
+        });
 
-            var compileJava = tasks.named(COMPILE_JAVA_TASK_NAME);
-            var bootBuildInfo = tasks.named(BOOT_BUILD_INFO_TASK_NAME);
-
-            bootBuildInfo.configure(tBoot -> {
-                tBoot.mustRunAfter(compileJava);
-                tBoot.dependsOn(compileJava);
-            });
+        project.getTasks().matching(t -> t.getName().equals(BOOT_BUILD_INFO_TASK_NAME)).configureEach(tBoot -> {
+            var compileJava = project.getTasks().named(COMPILE_JAVA_TASK_NAME);
+            tBoot.mustRunAfter(compileJava);
+            tBoot.dependsOn(compileJava);
         });
     }
 }

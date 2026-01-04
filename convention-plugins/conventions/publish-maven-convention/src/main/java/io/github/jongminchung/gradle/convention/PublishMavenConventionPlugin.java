@@ -14,22 +14,18 @@ public class PublishMavenConventionPlugin implements Plugin<@NonNull Project> {
                         ExtraMavenPublishExtension.EXTRA_MAVEN_PUBLISH_EXTENSION_NAME,
                         ExtraMavenPublishExtension.class);
 
-        target.afterEvaluate(project -> {
-            if (!extraMavenPublishExtension.getEnabled().get()) {
+        target.getPluginManager().withPlugin("maven-publish", plugin -> {
+            if (!extraMavenPublishExtension.getEnabled().getOrElse(true)) {
                 return;
             }
 
-            var pluginManager = project.getPluginManager();
+            var publishing = target.getExtensions().findByType(PublishingExtension.class);
 
-            pluginManager.withPlugin("maven-publish", plugin -> {
-                var publishing = project.getExtensions().findByType(PublishingExtension.class);
+            if (publishing != null) {
+                var publications = publishing.getPublications();
 
-                if (publishing != null) {
-                    var publications = publishing.getPublications();
-
-                    publications.all(Publication::withBuildIdentifier);
-                }
-            });
+                publications.all(Publication::withBuildIdentifier);
+            }
         });
     }
 }

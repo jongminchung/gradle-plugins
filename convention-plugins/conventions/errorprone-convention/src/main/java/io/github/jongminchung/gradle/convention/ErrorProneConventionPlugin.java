@@ -14,6 +14,8 @@ import net.ltgt.gradle.nullaway.NullAwayExtension;
 import net.ltgt.gradle.nullaway.NullAwayOptions;
 import net.ltgt.gradle.nullaway.NullAwayPlugin;
 
+import java.util.Collections;
+
 public class ErrorProneConventionPlugin implements Plugin<@NonNull Project> {
     static final String JSPECIFY = "org.jspecify:jspecify:1.0.0";
     static final String NULLAWAY_DEPENDENCY = "com.uber.nullaway:nullaway:";
@@ -64,18 +66,17 @@ public class ErrorProneConventionPlugin implements Plugin<@NonNull Project> {
                 }
             });
 
-            target.afterEvaluate(project -> {
-                var nullawayExt = project.getExtensions().findByType(NullAwayExtension.class);
-                if (nullawayExt != null) {
+            target.getPlugins().withType(NullAwayPlugin.class, unused2 -> {
+                var nullawayExt = target.getExtensions().getByType(NullAwayExtension.class);
+                nullawayExt.getOnlyNullMarked().set(extraErrorProne.getUseNullMarked());
+
+                nullawayExt.getAnnotatedPackages().addAll(target.getProviders().provider(() -> {
                     if (extraErrorProne.getUseNullMarked().get()) {
-                        nullawayExt.getOnlyNullMarked().set(true); // Enable nullness checks only in null-marked code
-                    } else {
-                        String group = String.valueOf(project.getGroup());
-                        if (!group.isBlank()) {
-                            nullawayExt.getAnnotatedPackages().add(group);
-                        }
+                        return Collections.emptyList();
                     }
-                }
+                    var group = String.valueOf(target.getGroup());
+                    return group.isBlank() ? Collections.emptyList() : Collections.singletonList(group);
+                }));
             });
         });
     }
