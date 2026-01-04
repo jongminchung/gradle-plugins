@@ -27,6 +27,18 @@ import com.github.gradle.node.NodeExtension;
 import com.github.gradle.node.NodePlugin;
 import com.github.gradle.node.npm.task.NpxTask;
 
+/**
+ * OpenAPI 명세를 기반으로 Spring 서버 코드를 자동 생성하고 관리하는 플러그인입니다.
+ *
+ * <p>이 플러그인은 다음과 같은 Spec-First 개발 프로세스를 지원합니다:
+ *
+ * <ul>
+ *   <li>OpenAPI 스펙 파일의 Lint 검사 (Redocly 기반)
+ *   <li>분할된 OpenAPI 명세의 통합 (Bundle)
+ *   <li>명세 기반의 Spring Controller 및 DTO 자동 생성
+ *   <li>Node.js 및 OpenAPI Generator 환경 자동 구성
+ * </ul>
+ */
 public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
     private static final String GROUP_NAME = "openapi";
 
@@ -36,6 +48,11 @@ public class OpenApiSpringGeneratorPlugin implements Plugin<@NonNull Project> {
 
     private static final String GENERATED_OPENAPI_PATH = "generated/openapi";
 
+    /**
+     * OpenAPI Spring Generator 플러그인을 프로젝트에 적용합니다.
+     *
+     * @param target 적용 대상 프로젝트
+     */
     @Override
     public void apply(@NonNull Project target) {
         if (!target.getPlugins().hasPlugin(JavaPlugin.class)) {

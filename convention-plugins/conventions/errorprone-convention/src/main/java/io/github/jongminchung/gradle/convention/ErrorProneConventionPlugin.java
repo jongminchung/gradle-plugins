@@ -16,11 +16,30 @@ import net.ltgt.gradle.nullaway.NullAwayPlugin;
 
 import java.util.Collections;
 
+/**
+ * ErrorProne 및 NullAway 설정을 프로젝트에 적용하는 플러그인입니다.
+ *
+ * <p>이 플러그인은 다음과 같은 기능을 수행합니다:
+ * <ul>
+ *   <li>{@code ErrorProne} 및 {@code NullAway} 플러그인을 적용합니다.</li>
+ *   <li>{@code JavaCompile} 태스크에 ErrorProne 옵션을 설정하고, 특정 검사 항목의 심각도를 {@code ERROR}로 상향합니다.</li>
+ *   <li>NullAway의 점진적 도입을 위해 {@code @NullMarked} 어노테이션 기반 검사 설정을 지원합니다.</li>
+ *   <li>{@code JSpecify} 의존성을 자동으로 추가합니다.</li>
+ * </ul>
+ */
 public class ErrorProneConventionPlugin implements Plugin<@NonNull Project> {
     static final String JSPECIFY = "org.jspecify:jspecify:1.0.0";
     static final String NULLAWAY_DEPENDENCY = "com.uber.nullaway:nullaway:";
     static final String ERROR_PRONE_DEPENDENCY = "com.google.errorprone:error_prone_core:";
 
+    /**
+     * ErrorProne 및 NullAway 설정을 프로젝트에 적용합니다.
+     *
+     * <p>이 메서드는 {@code afterEvaluate}를 사용하지 않고 {@code withPlugin} 및 Lazy Configuration API를 사용하여
+     * 플러그인이 적용되는 시점에 설정을 연결합니다.
+     *
+     * @param target 적용 대상 프로젝트
+     */
     @Override
     public void apply(Project target) {
         var extraErrorProne =
