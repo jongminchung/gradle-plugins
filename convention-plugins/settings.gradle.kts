@@ -5,7 +5,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "convention-plugins"
 
 includeConvention("jacoco-convention")
-includeConvention("jacoco-report-aggregation-convention")
 includeConvention("publish-maven-convention")
 includeConvention("java-convention")
 includeConvention("jvm-test-suite-convention")

@@ -22,7 +22,6 @@ dependencies {
     implementation(rootProject.projects.springBootConvention)
 
     implementation(rootProject.projects.jacocoConvention)
-    implementation(rootProject.projects.jacocoReportAggregationConvention)
 
     implementation(rootProject.projects.javaConvention)
     implementation(rootProject.projects.jvmTestSuiteConvention)
