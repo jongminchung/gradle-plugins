@@ -14,11 +14,13 @@ public abstract class ExtraErrorProneExtension {
 
     private final Property<@NonNull String> errorProneVersion;
     private final Property<@NonNull String> nullAwayVersion;
+    private final Property<@NonNull Boolean> useNullMarked;
 
     @Inject
     public ExtraErrorProneExtension(ObjectFactory objects) {
         this.errorProneVersion = objects.property(String.class).convention(ERROR_PRONE_VERSION);
         this.nullAwayVersion = objects.property(String.class).convention(NULL_AWAY_VERSION);
+        this.useNullMarked = objects.property(Boolean.class).convention(false);
     }
 
     public Property<@NonNull String> getErrorProneVersion() {
@@ -27,5 +29,9 @@ public abstract class ExtraErrorProneExtension {
 
     public Property<@NonNull String> getNullAwayVersion() {
         return nullAwayVersion;
+    }
+
+    public Property<@NonNull Boolean> getUseNullMarked() {
+        return useNullMarked;
     }
 }

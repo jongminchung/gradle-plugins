@@ -27,7 +27,7 @@ public class ErrorProneConventionPlugin implements Plugin<@NonNull Project> {
         target.getPlugins().apply(ErrorPronePlugin.class);
         target.getPlugins().apply(NullAwayPlugin.class);
 
-        target.getPluginManager().withPlugin("java", _ -> {
+        target.getPluginManager().withPlugin("java", unused -> {
             target.getDependencies().add(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, JSPECIFY);
 
             var nullawayDependency =
@@ -56,19 +56,27 @@ public class ErrorProneConventionPlugin implements Plugin<@NonNull Project> {
                 ExtensionAware errorproneExt = (ExtensionAware) errorProneOptions;
                 var nullaway = errorproneExt.getExtensions().findByType(NullAwayOptions.class);
                 if (nullaway != null) {
-                    nullaway.error();
+                    if (extraErrorProne.getUseNullMarked().get()) {
+                        errorProneOptions.option("NullAway:OnlyNullMarked", "true"); // Enable nullness checks only in null-marked code
+                        errorProneOptions.option("NullAway:JSpecifyMode", "true"); // https://github.com/uber/NullAway/wiki/JSpecify-Support
+                    }
+                    nullaway.error(); // bump checks from warnings (default) to errors
                 }
             });
-        });
 
-        target.afterEvaluate(project -> {
-            var nullawayExt = project.getExtensions().findByType(NullAwayExtension.class);
-            if (nullawayExt != null) {
-                String group = String.valueOf(project.getGroup());
-                if (!group.isBlank()) {
-                    nullawayExt.getAnnotatedPackages().add(group);
+            target.afterEvaluate(project -> {
+                var nullawayExt = project.getExtensions().findByType(NullAwayExtension.class);
+                if (nullawayExt != null) {
+                    if (extraErrorProne.getUseNullMarked().get()) {
+                        nullawayExt.getOnlyNullMarked().set(true); // Enable nullness checks only in null-marked code
+                    } else {
+                        String group = String.valueOf(project.getGroup());
+                        if (!group.isBlank()) {
+                            nullawayExt.getAnnotatedPackages().add(group);
+                        }
+                    }
                 }
-            }
+            });
         });
     }
 
